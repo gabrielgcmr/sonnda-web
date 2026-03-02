@@ -1,0 +1,560 @@
+openapi: 3.0.3
+info:
+  title: Sonnda API
+  version: "0.1.0"
+  description: |-
+    OpenAPI inicial das rotas HTTP da Sonnda.
+servers:
+  - url: http://localhost:8080
+    description: Desenvolvimento local
+  - url: https://api.sonnda.com.br
+    description: Produção
+security:
+  - bearerAuth: []
+paths:
+  # Public
+  /:
+    get:
+      summary: API metadata
+      security: []
+      tags: [Public]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/RootResponse"
+  /healthz:
+    get:
+      summary: Health check
+      security: []
+      tags: [Public]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthResponse"
+  /readyz:
+    get:
+      summary: Readiness check
+      security: []
+      tags: [Public]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/HealthResponse"
+  /docs:
+    get:
+      summary: API docs (Redoc)
+      security: []
+      tags: [Public]
+      responses:
+        "200":
+          description: HTML
+          content:
+            text/html:
+              schema:
+                type: string
+  # Me (usuário autenticado)
+  /v1/me:
+    post:
+      summary: Criar usuário
+      description: |-
+        Cria o usuário da plataforma a partir da identidade autenticada (JWT do Supabase).
+        Requer token válido do Supabase (Bearer).
+      tags: [Me]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateUserRequest"
+      responses:
+        "201":
+          description: Usuário criado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "409":
+          $ref: "#/components/responses/Problem"
+        "400":
+          $ref: "#/components/responses/Problem"
+        "401":
+          $ref: "#/components/responses/Problem"
+        "422":
+          $ref: "#/components/responses/Problem"
+        "500":
+          $ref: "#/components/responses/Problem"
+    get:
+      summary: Obter perfil do usuário atual
+      tags: [Me]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "401":
+          $ref: "#/components/responses/Problem"
+        "500":
+          $ref: "#/components/responses/Problem"
+    put:
+      summary: Atualizar perfil do usuário atual
+      tags: [Me]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateUserRequest"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        "400":
+          $ref: "#/components/responses/Problem"
+        "401":
+          $ref: "#/components/responses/Problem"
+        "422":
+          $ref: "#/components/responses/Problem"
+        "500":
+          $ref: "#/components/responses/Problem"
+    delete:
+      summary: Remover usuário atual (hard delete)
+      tags: [Me]
+      responses:
+        "204":
+          description: No Content
+        "401":
+          $ref: "#/components/responses/Problem"
+        "500":
+          $ref: "#/components/responses/Problem"
+  /v1/me/patients:
+    get:
+      summary: Listar pacientes do usuário atual
+      tags: [Me]
+      parameters:
+        - $ref: "#/components/parameters/LimitParam"
+        - $ref: "#/components/parameters/OffsetParam"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PatientsList"
+        "401":
+          $ref: "#/components/responses/Problem"
+        "500":
+          $ref: "#/components/responses/Problem"
+  # patients
+  /v1/patients:
+    post:
+      summary: Criar paciente
+      tags: [Patient]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreatePatientRequest"
+      responses:
+        "201":
+          description: Paciente criado
+          headers:
+            Location:
+              description: Caminho do novo recurso
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PatientCreatedResponse"
+        "400":
+          $ref: "#/components/responses/Problem"
+        "401":
+          $ref: "#/components/responses/Problem"
+        "422":
+          $ref: "#/components/responses/Problem"
+        "500":
+          $ref: "#/components/responses/Problem"
+    get:
+      summary: Listar pacientes
+      tags: [Patient]
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PatientsList"
+        "401":
+          $ref: "#/components/responses/Problem"
+        "500":
+          $ref: "#/components/responses/Problem"
+  /v1/patients/{id}:
+    get:
+      summary: Obter paciente
+      tags: [Patient]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Patient"
+        "400":
+          $ref: "#/components/responses/Problem"
+        "401":
+          $ref: "#/components/responses/Problem"
+        "404":
+          $ref: "#/components/responses/Problem"
+        "500":
+          $ref: "#/components/responses/Problem"
+  /v1/patients/{id}/labs:
+    get:
+      summary: Listar laudos
+      tags:
+        - Labs
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: expand
+          in: query
+          required: false
+          schema:
+            type: string
+            enum:
+              - full
+          description: Retorna a representação completa quando expand=full
+        - name: include
+          in: query
+          required: false
+          schema:
+            type: string
+          description: "Lista de campos para expandir (ex.: results)"
+        - $ref: "#/components/parameters/LimitParam"
+        - $ref: "#/components/parameters/OffsetParam"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LabsList"
+        "400":
+          $ref: "#/components/responses/Problem"
+        "401":
+          $ref: "#/components/responses/Problem"
+        "500":
+          $ref: "#/components/responses/Problem"
+    post:
+      summary: Upload de laudo
+      tags: [Labs]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [file]
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        "201":
+          description: Laudo criado
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LabUploadResponse"
+        "400":
+          $ref: "#/components/responses/Problem"
+        "401":
+          $ref: "#/components/responses/Problem"
+        "413":
+          $ref: "#/components/responses/Problem"
+        "415":
+          $ref: "#/components/responses/Problem"
+        "500":
+          $ref: "#/components/responses/Problem"
+# =========================
+# Components
+# =========================
+components:
+  # Security Schemes
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  # Parameters
+  parameters:
+    LimitParam:
+      name: limit
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+      description: Número máximo de itens
+    OffsetParam:
+      name: offset
+      in: query
+      required: false
+      schema:
+        type: integer
+        minimum: 0
+      description: Número de itens para pular
+  # Responses
+  responses:
+    Problem:
+      description: Erro padronizado (RFC 9457 - Problem Details)
+      content:
+        application/problem+json:
+          schema:
+            $ref: "#/components/schemas/ProblemDetails"
+  schemas:
+    ProblemDetails:
+      type: object
+      properties:
+        type:
+          type: string
+          description: URI que identifica o tipo do problema.
+          example: urn:sonnda:problem:validation_failed
+        title:
+          type: string
+          description: Resumo curto e legível do problema.
+          example: Falha de validação
+        status:
+          type: integer
+          description: HTTP status code.
+          example: 400
+        detail:
+          type: string
+          description: Explicação específica desta ocorrência.
+          example: entrada inválida
+        instance:
+          type: string
+          description: URI que identifica a ocorrência específica do problema.
+          example: urn:sonnda:request-id:8a0f8a9b-2e1c-4c46-a2b1-1a6f8a6c2e44
+        code:
+          type: string
+          description: Código estável do erro (contrato Sonnda).
+          example: VALIDATION_FAILED
+        traceId:
+          type: string
+          description: Identificador para rastreamento (normalmente X-Request-ID).
+          example: 8a0f8a9b-2e1c-4c46-a2b1-1a6f8a6c2e44
+        timestamp:
+          type: string
+          format: date-time
+          description: Timestamp (UTC) da ocorrência do erro.
+          example: "2026-02-06T12:34:56Z"
+        violations:
+          type: array
+          description: Lista de violações de validação (quando aplicável).
+          items:
+            type: object
+            properties:
+              field:
+                type: string
+                example: birth_date
+              reason:
+                type: string
+                example: required
+      required: [type, title, status, detail, code]
+    HealthResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          example: ok
+      required: [status]
+    RootResponse:
+      type: object
+      properties:
+        name:
+          type: string
+        version:
+          type: string
+        environment:
+          type: string
+        docs:
+          type: string
+        openapi:
+          type: string
+        health:
+          type: string
+        ready:
+          type: string
+      required: [name, version, environment, docs, openapi, health, ready]
+    CreateUserRequest:
+      type: object
+      required:
+        - full_name
+        - birth_date
+        - cpf
+        - phone
+      properties:
+        full_name:
+          type: string
+          minLength: 2
+          maxLength: 120
+        account_type:
+          type: string
+          enum: [basic_care] # tira "professional" do contrato enquanto MVP
+        birth_date:
+          type: string
+          format: date
+        cpf:
+          type: string
+          pattern: "^[0-9]{11}$"
+          description: "CPF sem pontuação (apenas dígitos)"
+        phone:
+          type: string
+          pattern: "^\\+?[0-9]{10,15}$"
+    UpdateUserRequest:
+      type: object
+      properties:
+        full_name:
+          type: string
+          nullable: true
+        birth_date:
+          type: string
+          format: date
+          nullable: true
+        cpf:
+          type: string
+          pattern: "^[0-9]{11}$"
+          description: "CPF sem pontuação (apenas dígitos)"
+          nullable: true
+        phone:
+          type: string
+          pattern: "^\\+?[0-9]{10,15}$"
+          nullable: true
+    CreatePatientRequest:
+      type: object
+      required:
+        - cpf
+        - full_name
+        - birth_date
+        - gender
+        - race
+      properties:
+        cpf:
+          type: string
+          pattern: "^[0-9]{11}$"
+          minLength: 11
+          maxLength: 11
+          description: "CPF sem pontuação (apenas dígitos)"
+        full_name:
+          type: string
+          minLength: 1
+        birth_date:
+          type: string
+          format: date
+        gender:
+          type: string
+          enum: [MALE, FEMALE, OTHER, UNKNOWN]
+        race:
+          type: string
+          enum: [WHITE, BLACK, ASIAN, MIXED, INDIGENOUS, UNKNOWN]
+        phone:
+          type: string
+          pattern: "^\\+?[0-9]{10,15}$"
+          minLength: 10
+          maxLength: 16
+          nullable: true
+        avatar_url:
+          type: string
+          format: uri
+          nullable: true
+    PatientCreatedResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+      required: [id]
+    User:
+      type: object
+      description: Representação simplificada do usuário.
+      additionalProperties: true
+    Patient:
+      type: object
+      description: Representação simplificada do paciente.
+      additionalProperties: true
+      properties:
+        id:
+          type: string
+          format: uuid
+        cpf:
+          type: string
+          pattern: "^[0-9]{11}$"
+          minLength: 11
+          maxLength: 11
+        full_name:
+          type: string
+          minLength: 1
+        birth_date:
+          type: string
+          format: date
+        gender:
+          type: string
+          enum: [MALE, FEMALE, OTHER, UNKNOWN]
+        race:
+          type: string
+          enum: [WHITE, BLACK, ASIAN, MIXED, INDIGENOUS, UNKNOWN]
+        phone:
+          type: string
+          pattern: "^\\+?[0-9]{10,15}$"
+          nullable: true
+        avatar_url:
+          type: string
+          format: uri
+          nullable: true
+      required: [id]
+    PatientsList:
+      type: array
+      items:
+        $ref: "#/components/schemas/Patient"
+    LabsList:
+      type: array
+      items:
+        type: object
+        additionalProperties: true
+    LabUploadResponse:
+      type: object
+      description: Retorno do processamento do laudo.
+      additionalProperties: true
