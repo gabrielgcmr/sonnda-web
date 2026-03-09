@@ -120,6 +120,81 @@ p {
   align-items: flex-start;
 }
 
+.app-header {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  align-items: center;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid rgba(173, 192, 220, 0.12);
+}
+
+.app-header__identity {
+  display: grid;
+  gap: 0.85rem;
+}
+
+.app-header__actions {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.profile-chip {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+}
+
+.profile-chip__avatar {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 16px;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg, rgba(77, 182, 255, 0.28), rgba(44, 125, 255, 0.48));
+  color: #eef8ff;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  border: 1px solid rgba(159, 216, 255, 0.28);
+}
+
+.profile-chip__content {
+  display: grid;
+  gap: 0.15rem;
+}
+
+.profile-chip__content h1 {
+  font-size: clamp(1.4rem, 2vw, 1.9rem);
+}
+
+.icon-button {
+  width: 3rem;
+  height: 3rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 14px;
+  border: 1px solid rgba(173, 192, 220, 0.18);
+  background: rgba(173, 192, 220, 0.08);
+  color: #eef4ff;
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.icon-button:hover {
+  transform: translateY(-1px);
+  border-color: rgba(159, 216, 255, 0.3);
+  background: rgba(173, 192, 220, 0.12);
+}
+
+.icon-button svg {
+  width: 1.2rem;
+  height: 1.2rem;
+}
+
 .content-stack {
   display: grid;
   gap: 1.5rem;
@@ -291,5 +366,14 @@ p {
 
   .topbar {
     flex-direction: column;
+  }
+
+  .app-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .app-header__actions {
+    justify-content: flex-end;
   }
 }

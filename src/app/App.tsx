@@ -1,4 +1,5 @@
 import { BrowserRouter, Navigate, Outlet, Route, Routes } from 'react-router-dom'
+import ProtectedLayout from './ProtectedLayout'
 import { AuthProvider } from '../features/auth/AuthProvider'
 import { useAuth } from '../features/auth/useAuth'
 import AppHomePage from '../pages/AppHomePage'
@@ -128,30 +129,6 @@ function ProfiledOnlyRoute() {
   return <Outlet />
 }
 
-function AppShell() {
-  const { logout, session, userProfile } = useAuth()
-
-  return (
-    <main className="shell">
-      <section className="panel">
-        <header className="topbar">
-          <div>
-            <span className="eyebrow">Area protegida</span>
-            <h1>{userProfile?.full_name ?? 'Sonnda'}</h1>
-            <p className="muted">
-              Sessao ativa para {session?.user.email ?? 'usuario autenticado'}.
-            </p>
-          </div>
-          <button className="button button-secondary" onClick={() => void logout()}>
-            Sair
-          </button>
-        </header>
-        <Outlet />
-      </section>
-    </main>
-  )
-}
-
 function App() {
   return (
     <AuthProvider>
@@ -167,7 +144,7 @@ function App() {
             <Route path="/onboarding" element={<OnboardingPage />} />
           </Route>
           <Route element={<ProfiledOnlyRoute />}>
-            <Route path="/app" element={<AppShell />}>
+            <Route path="/app" element={<ProtectedLayout />}>
               <Route index element={<AppHomePage />} />
               <Route path="*" element={<Navigate to="/app" replace />} />
             </Route>
