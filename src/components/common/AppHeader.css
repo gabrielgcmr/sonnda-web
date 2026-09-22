@@ -1,0 +1,64 @@
+/* src/components/common/AppHeader.css */
+.app-header {
+  position: relative;
+  z-index: 10;
+  padding: 1rem 2rem;
+  border-bottom: 1px solid rgba(173, 192, 220, 0.18);
+  background: #0b1628;
+}
+
+.app-header__inner {
+  width: min(100%, 980px);
+  margin-inline: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.app-header__actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  min-width: 0;
+}
+
+.header-profile dt { color: #adc0dc; font-size: 0.85rem; }
+.header-profile dd { margin: 0; overflow-wrap: anywhere; }
+.header-profile summary:focus-visible { outline: 2px solid #9fd8ff; outline-offset: 4px; }
+.header-profile { position: relative; min-width: 0; }
+.header-profile summary { cursor: pointer; border-radius: 14px; }
+.header-profile summary::marker { content: ''; }
+.header-profile summary::-webkit-details-marker { display: none; }
+.header-profile summary::after { content: '⌄'; color: #adc0dc; }
+.header-profile[open] summary::after { content: '⌃'; }
+.header-profile__details { position: absolute; right: 0; top: calc(100% + 0.75rem); z-index: 5; width: min(320px, 75vw); padding: 1.25rem; border: 1px solid #344761; border-radius: 16px; background: #0d1a2f; box-shadow: 0 16px 40px #03081380; overflow-wrap: anywhere; }
+.header-profile__details dl { display: grid; gap: 0.75rem; margin-bottom: 0; }
+.profile-chip__content { min-width: 0; overflow-wrap: anywhere; }
+
+
+@media (max-width: 900px) {
+  .app-header { padding-inline: 1rem; }
+}
+
+@media (max-width: 600px) {
+  .app-header__inner { flex-wrap: wrap; }
+  .app-header__actions { width: 100%; justify-content: space-between; }
+  .header-profile__details { left: 0; right: auto; }
+}
+
+.profile-chip {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+}
+
+.profile-chip__content {
+  display: grid;
+  gap: 0.15rem;
+}
+
+.profile-chip__content h1 {
+  font-size: clamp(1.4rem, 2vw, 1.9rem);
+}
+

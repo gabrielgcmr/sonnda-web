@@ -1,0 +1,14 @@
+/* src/components/ui/Avatar.css */
+.avatar {
+  flex-shrink: 0;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 16px;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg, rgba(77, 182, 255, 0.28), rgba(44, 125, 255, 0.48));
+  color: #eef8ff;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  border: 1px solid rgba(159, 216, 255, 0.28);
+}

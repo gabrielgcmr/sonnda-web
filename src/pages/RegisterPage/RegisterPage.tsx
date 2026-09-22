@@ -1,0 +1,41 @@
+// src/pages/RegisterPage/RegisterPage.tsx
+import { Link, useNavigate } from 'react-router-dom'
+import { routes } from '../../app/router/routes'
+import RegisterForm from '../../features/auth/components/RegisterForm'
+import type { SignUpResult } from '../../features/auth/types'
+
+function RegisterPage() {
+  const navigate = useNavigate()
+
+  function handleRegistered(result: SignUpResult) {
+    if (result.emailConfirmationRequired) {
+      const searchParams = new URLSearchParams({ email: result.email })
+      navigate(routes.confirmEmail + '?' + searchParams.toString(), { replace: true })
+      return
+    }
+    navigate(routes.root, { replace: true })
+  }
+
+  return (
+    <>
+      <div className="auth-copy">
+        <span className="eyebrow">Criar conta</span>
+        <h1>Cadastre seu acesso</h1>
+        <p className="muted">
+          Primeiro voce cria a credencial no Supabase. Depois de confirmar o
+          email, o primeiro login leva voce para o onboarding.
+        </p>
+      </div>
+      <div className="panel panel-compact">
+        <RegisterForm onRegistered={handleRegistered}>
+          <p className="muted auth-footnote">
+            Ja tem uma conta?{' '}
+            <Link className="text-link" to={routes.login}>Entrar</Link>
+          </p>
+        </RegisterForm>
+      </div>
+    </>
+  )
+}
+
+export default RegisterPage

@@ -9,7 +9,8 @@
     "all": "concurrently -n WEB,API -c auto \"bun run web\" \"bun run api\"",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test": "bun test"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.98.0",

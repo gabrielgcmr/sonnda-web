@@ -1,0 +1,15 @@
+/* src/app/layouts/AppLayout.css */
+.protected-layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.protected-layout__main {
+  flex: 1;
+  min-height: 0;
+}
+
+.protected-layout__main > .panel {
+  margin-inline: auto;
+}

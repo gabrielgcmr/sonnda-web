@@ -1,0 +1,17 @@
+/* src/features/patient/components/PatientDirectory.css */
+.patients-heading,
+.patients-search {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.patients-heading h1 { font-size: clamp(1.8rem, 3vw, 2.4rem); }
+.patients-search { align-items: end; }
+.patients-search .field { flex: 1; }
+.patients-empty { display: grid; justify-items: center; text-align: center; gap: 1rem; padding: 2rem 1rem; }
+
+@media (max-width: 600px) {
+  .patients-heading, .patients-search { flex-direction: column; align-items: stretch; }
+}
