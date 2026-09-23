@@ -1,12 +1,14 @@
 // src/app/layouts/AppLayout.tsx
 import { Outlet } from 'react-router-dom'
+import { useAccount } from '../../features/account/hooks/useAccount'
 import { useAuth } from '../../features/auth/hooks/useAuth'
 import AppHeader from '../../components/common/AppHeader'
-import { getDisplayName, getDisplayRole } from '../../features/auth/utils/userDisplayName'
+import { getDisplayName, getDisplayRole } from '../../features/account/profile/userDisplayName'
 import './AppLayout.css'
 
 function AppLayout() {
-  const { logout, session, userProfile } = useAuth()
+  const { logout, session } = useAuth()
+  const { userProfile } = useAccount()
   const displayName = getDisplayName(userProfile?.full_name)
   const displayRole = getDisplayRole(userProfile)
 

@@ -1,6 +1,6 @@
-// src/pages/ConfirmEmailPage/ConfirmEmailPage.tsx
+// src/features/auth/confirmEmail/ConfirmEmailPage.tsx
 import { Link, useSearchParams } from 'react-router-dom'
-import { routes } from '../../app/router/routes'
+import { AuthRoutes } from '../authRoutes'
 
 function ConfirmEmailPage() {
   const [searchParams] = useSearchParams()
@@ -26,10 +26,10 @@ function ConfirmEmailPage() {
           Abra a mensagem, confirme a conta e depois volte para fazer login.
         </p>
         <div className="actions-row">
-          <Link className="button button-primary" to={routes.login}>
+          <Link className="button button-primary" to={AuthRoutes.login}>
             Ir para login
           </Link>
-          <Link className="button button-secondary" to={routes.register}>
+          <Link className="button button-secondary" to={AuthRoutes.register}>
             Criar outra conta
           </Link>
         </div>

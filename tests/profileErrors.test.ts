@@ -1,7 +1,7 @@
 // tests/profileErrors.test.ts
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
-import { isProfileNotFoundError } from '../src/features/auth/api/profileErrors'
+import { isProfileNotFoundError } from '../src/features/account/profile/profileErrors'
 import { ApiError, normalizeProblem } from '../src/services/api/errors'
 
 function apiError(status: number, code: string, detail: string) {

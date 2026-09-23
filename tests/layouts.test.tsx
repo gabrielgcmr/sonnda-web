@@ -1,4 +1,7 @@
 // tests/layouts.test.tsx
+import type { PropsWithChildren } from 'react'
+import { AccountContext } from '../src/features/account/context/account-context'
+import type { AccountContextValue } from '../src/features/account/types'
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
 import { renderToStaticMarkup } from 'react-dom/server'
@@ -8,14 +11,16 @@ import AuthLayout from '../src/app/layouts/AuthLayout'
 import AuthGuard from '../src/app/router/guards/AuthGuard'
 import { AuthContext } from '../src/features/auth/context/auth-context'
 import type { AuthContextValue } from '../src/features/auth/types'
-import LoginPage from '../src/pages/LoginPage/LoginPage'
+import LoginPage from '../src/features/auth/login/LoginPage'
 
-const account: AuthContextValue = {
+const account: AuthContextValue & AccountContextValue = {
   session: null,
   isAuthenticated: true,
   userProfile: { id: 'test-user', full_name: 'Ana Silva' },
   loading: false,
   authError: null,
+  accountError: null,
+  retryProfile: async () => {},
   login: async () => {},
   signUp: async () => ({ email: 'test@example.com', emailConfirmationRequired: true }),
   logout: async () => {},
@@ -25,7 +30,7 @@ const account: AuthContextValue = {
 
 test('the app header remains outside and before the patient content', () => {
   const html = renderToStaticMarkup(
-    <AuthContext.Provider value={account}>
+    <TestProviders value={account}>
       <MemoryRouter initialEntries={['/app']}>
         <Routes>
           <Route path="/app" element={<AppLayout />}>
@@ -33,7 +38,7 @@ test('the app header remains outside and before the patient content', () => {
           </Route>
         </Routes>
       </MemoryRouter>
-    </AuthContext.Provider>,
+    </TestProviders>,
   )
   assert.ok(html.indexOf('</header>') < html.indexOf('<main'))
   assert.match(html, /Ana Silva/)
@@ -42,7 +47,7 @@ test('the app header remains outside and before the patient content', () => {
 
 test('the auth layout composes the login form with its navigation links', () => {
   const html = renderToStaticMarkup(
-    <AuthContext.Provider value={{ ...account, isAuthenticated: false, userProfile: null }}>
+    <TestProviders value={{ ...account, isAuthenticated: false, userProfile: null }}>
       <MemoryRouter initialEntries={['/login']}>
         <Routes>
           <Route element={<AuthLayout />}>
@@ -50,7 +55,7 @@ test('the auth layout composes the login form with its navigation links', () => 
           </Route>
         </Routes>
       </MemoryRouter>
-    </AuthContext.Provider>,
+    </TestProviders>,
   )
   assert.equal((html.match(/<main/g) ?? []).length, 1)
   assert.equal((html.match(/<form/g) ?? []).length, 1)
@@ -61,7 +66,7 @@ test('the auth layout composes the login form with its navigation links', () => 
 test('guards hide protected content during loading and bootstrap errors', () => {
   for (const state of [{ loading: true, authError: null }, { loading: false, authError: 'Falha de teste' }]) {
     const html = renderToStaticMarkup(
-      <AuthContext.Provider value={{ ...account, ...state }}>
+      <TestProviders value={{ ...account, ...state }}>
         <MemoryRouter initialEntries={['/app']}>
           <Routes>
             <Route element={<AuthGuard access="profiled" />}>
@@ -69,7 +74,7 @@ test('guards hide protected content during loading and bootstrap errors', () => 
             </Route>
           </Routes>
         </MemoryRouter>
-      </AuthContext.Provider>,
+      </TestProviders>,
     )
     assert.doesNotMatch(html, /Protected patient data/)
     assert.match(html, state.loading ? /Carregando sua sessao/ : /Falha de teste/)
@@ -85,7 +90,7 @@ test('patients are never rendered for a guest or an account without a profile', 
     { isAuthenticated: true, userProfile: null },
   ]) {
     const html = renderToStaticMarkup(
-      <AuthContext.Provider value={{ ...account, ...state }}>
+      <TestProviders value={{ ...account, ...state }}>
         <MemoryRouter initialEntries={['/app']}>
           <Routes>
             <Route element={<AuthGuard access="profiled" />}>
@@ -93,7 +98,7 @@ test('patients are never rendered for a guest or an account without a profile', 
             </Route>
           </Routes>
         </MemoryRouter>
-      </AuthContext.Provider>,
+      </TestProviders>,
     )
     assert.doesNotMatch(html, /Protected patient data/)
   }
@@ -101,7 +106,7 @@ test('patients are never rendered for a guest or an account without a profile', 
 
 test('authenticated profiles can render patients', () => {
   const html = renderToStaticMarkup(
-    <AuthContext.Provider value={account}>
+    <TestProviders value={account}>
       <MemoryRouter initialEntries={['/app']}>
         <Routes>
           <Route element={<AuthGuard access="profiled" />}>
@@ -109,7 +114,35 @@ test('authenticated profiles can render patients', () => {
           </Route>
         </Routes>
       </MemoryRouter>
-    </AuthContext.Provider>,
+    </TestProviders>,
   )
   assert.match(html, /Protected patient data/)
+})
+
+function TestProviders({ value, children }: PropsWithChildren<{ value: AuthContextValue & AccountContextValue }>) {
+  return <AuthContext.Provider value={value}><AccountContext.Provider value={value}>{children}</AccountContext.Provider></AuthContext.Provider>
+}
+
+test('account loading and errors block patients independently of a ready auth session', () => {
+  for (const state of [
+    { loading: true, accountError: null },
+    { loading: false, accountError: 'Falha ao carregar perfil' },
+  ]) {
+    const html = renderToStaticMarkup(
+      <AuthContext.Provider value={{ ...account, loading: false }}>
+        <AccountContext.Provider value={{ ...account, ...state }}>
+          <MemoryRouter initialEntries={['/app']}>
+            <Routes>
+              <Route element={<AuthGuard access="profiled" />}>
+                <Route path="/app" element={<p>Protected patient data</p>} />
+              </Route>
+            </Routes>
+          </MemoryRouter>
+        </AccountContext.Provider>
+      </AuthContext.Provider>,
+    )
+    assert.doesNotMatch(html, /Protected patient data/)
+    assert.match(html, state.loading ? /Carregando sua sessao/ : /Falha ao carregar perfil/)
+    if (!state.loading) assert.match(html, /Tentar novamente/)
+  }
 })

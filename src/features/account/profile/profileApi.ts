@@ -1,4 +1,4 @@
-// src/features/auth/api/profile.ts
+// src/features/account/profile/profileApi.ts
 import { apiClient } from "@/services/api/client";
 import type { CreateUserRequest, UserProfile } from "../types";
 import { isProfileNotFoundError } from "./profileErrors";

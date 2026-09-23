@@ -1,7 +1,7 @@
-// src/pages/LoginPage/LoginPage.tsx
+// src/features/auth/login/LoginPage.tsx
 import { Link } from 'react-router-dom'
-import { routes } from '../../app/router/routes'
-import LoginForm from '../../features/auth/components/LoginForm'
+import { AuthRoutes } from '../authRoutes'
+import LoginForm from '../components/LoginForm'
 
 function LoginPage() {
   return (
@@ -17,7 +17,7 @@ function LoginPage() {
       <LoginForm>
         <p className="muted auth-footnote">
           Ainda nao tem conta?{' '}
-          <Link className="text-link" to={routes.register}>Criar conta</Link>
+          <Link className="text-link" to={AuthRoutes.register}>Criar conta</Link>
         </p>
       </LoginForm>
     </>

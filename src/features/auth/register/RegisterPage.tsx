@@ -1,19 +1,19 @@
-// src/pages/RegisterPage/RegisterPage.tsx
+// src/features/auth/register/RegisterPage.tsx
 import { Link, useNavigate } from 'react-router-dom'
-import { routes } from '../../app/router/routes'
-import RegisterForm from '../../features/auth/components/RegisterForm'
-import type { SignUpResult } from '../../features/auth/types'
+import { AuthRoutes } from '../authRoutes'
+import RegisterForm from '../components/RegisterForm'
+import type { SignUpResult } from '../types'
 
-function RegisterPage() {
+function RegisterPage({ onAuthenticated }: { onAuthenticated: () => void }) {
   const navigate = useNavigate()
 
   function handleRegistered(result: SignUpResult) {
     if (result.emailConfirmationRequired) {
       const searchParams = new URLSearchParams({ email: result.email })
-      navigate(routes.confirmEmail + '?' + searchParams.toString(), { replace: true })
+      navigate(AuthRoutes.confirmEmail + '?' + searchParams.toString(), { replace: true })
       return
     }
-    navigate(routes.root, { replace: true })
+    onAuthenticated()
   }
 
   return (
@@ -30,7 +30,7 @@ function RegisterPage() {
         <RegisterForm onRegistered={handleRegistered}>
           <p className="muted auth-footnote">
             Ja tem uma conta?{' '}
-            <Link className="text-link" to={routes.login}>Entrar</Link>
+            <Link className="text-link" to={AuthRoutes.login}>Entrar</Link>
           </p>
         </RegisterForm>
       </div>

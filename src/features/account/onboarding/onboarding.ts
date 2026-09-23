@@ -1,4 +1,4 @@
-// src/features/auth/utils/onboarding.ts
+// src/features/account/onboarding/onboarding.ts
 export type FormState = {
   full_name: string
   birth_date: string

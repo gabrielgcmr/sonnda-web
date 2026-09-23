@@ -1,4 +1,4 @@
-// src/features/auth/api/profileErrors.ts
+// src/features/account/profile/profileErrors.ts
 import { ApiError } from '../../../services/api/errors'
 
 export function isProfileNotFoundError(error: unknown) {

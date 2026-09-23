@@ -1,17 +1,21 @@
 // src/app/router/guards/AuthGuard.tsx
 import { Navigate, Outlet } from 'react-router-dom'
-import AuthErrorScreen from '../../../features/auth/components/AuthErrorScreen'
+import AccountErrorScreen from '../../../features/account/components/AccountErrorScreen'
 import AuthLoadingScreen from '../../../features/auth/components/AuthLoadingScreen'
 import { useAuth } from '../../../features/auth/hooks/useAuth'
+import { useAccount } from '../../../features/account/hooks/useAccount'
 import { getRouteRedirect, type RouteAccess } from './routeAccess'
 
 function AuthGuard({ access }: { access: RouteAccess }) {
-  const { loading, authError, isAuthenticated, userProfile } = useAuth()
+  const auth = useAuth()
+  const account = useAccount()
 
-  if (loading) return <AuthLoadingScreen />
-  if (authError) return <AuthErrorScreen />
+  if (auth.loading) return <AuthLoadingScreen />
+  if (auth.authError) return <AccountErrorScreen message={auth.authError} onRetry={auth.retryBootstrap} onLogout={auth.logout} />
+  if (auth.isAuthenticated && account.loading) return <AuthLoadingScreen />
+  if (auth.isAuthenticated && account.accountError) return <AccountErrorScreen message={account.accountError} onRetry={account.retryProfile} onLogout={auth.logout} />
 
-  const redirect = getRouteRedirect(access, { isAuthenticated, hasProfile: Boolean(userProfile) })
+  const redirect = getRouteRedirect(access, { isAuthenticated: auth.isAuthenticated, hasProfile: Boolean(account.userProfile) })
   return redirect ? <Navigate to={redirect} replace /> : <Outlet />
 }
 

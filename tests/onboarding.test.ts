@@ -1,7 +1,7 @@
 // tests/onboarding.test.ts
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
-import { formatPhoneInput, normalizeCpf, normalizePhone, validateForm } from '../src/features/auth/utils/onboarding'
+import { formatPhoneInput, normalizeCpf, normalizePhone, validateForm } from '../src/features/account/onboarding/onboarding'
 
 test('onboarding accepts formatted identifiers and normalizes the API payload', () => {
   const values = { full_name: 'Ana Silva', birth_date: '1990-01-02', cpf: '123.456.789-00', phone: '(61) 99551-7251' }

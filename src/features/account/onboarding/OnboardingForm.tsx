@@ -1,11 +1,11 @@
-// src/features/auth/components/OnboardingForm.tsx
+// src/features/account/onboarding/OnboardingForm.tsx
 import { useState } from 'react'
 import { ApiError } from '../../../services/api/errors'
-import { useAuth } from '../hooks/useAuth'
-import { formatPhoneInput, normalizeCpf, normalizePhone, translateFieldError, validateForm, type FormState, type FormErrors } from '../utils/onboarding'
+import { useAccount } from '../hooks/useAccount'
+import { formatPhoneInput, normalizeCpf, normalizePhone, translateFieldError, validateForm, type FormState, type FormErrors } from './onboarding'
 
 function OnboardingForm({ onCompleted }: { onCompleted: () => void }) {
-  const { completeOnboarding } = useAuth()
+  const { completeOnboarding } = useAccount()
   const [loading, setLoading] = useState(false)
   const [values, setValues] = useState<FormState>({
     full_name: '',

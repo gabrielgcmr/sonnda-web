@@ -1,4 +1,4 @@
-// src/features/auth/utils/userDisplayName.ts
+// src/features/account/profile/userDisplayName.ts
 import type { UserProfile } from '../types'
 
 export function getDisplayName(fullName?: string) {
