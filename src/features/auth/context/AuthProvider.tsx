@@ -25,6 +25,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
     requestIdRef.current = requestId
 
     setSession(nextSession)
+    setUserProfile(null)
     setAuthError(null)
 
     if (!nextSession) {
@@ -68,15 +69,17 @@ export function AuthProvider({ children }: PropsWithChildren) {
     let active = true
 
     const bootstrap = async () => {
-      const {
-        data: { session: initialSession },
-      } = await supabase.auth.getSession()
-
-      if (!active) {
-        return
+      const requestId = requestIdRef.current
+      try {
+        const { data, error } = await supabase.auth.getSession()
+        if (!active || requestId !== requestIdRef.current) return
+        if (error) throw error
+        await syncSessionRef.current(data.session)
+      } catch {
+        if (!active || requestId !== requestIdRef.current) return
+        setAuthError('Nao foi possivel verificar sua sessao. Tente novamente.')
+        setLoading(false)
       }
-
-      await syncSessionRef.current(initialSession)
     }
 
     void bootstrap()
@@ -88,7 +91,10 @@ export function AuthProvider({ children }: PropsWithChildren) {
         return
       }
 
-      void syncSessionRef.current(nextSession)
+      // Defer API calls until the Supabase auth callback releases its lock.
+      setTimeout(() => {
+        if (active) void syncSessionRef.current(nextSession)
+      }, 0)
     })
 
     return () => {
@@ -169,20 +175,32 @@ export function AuthProvider({ children }: PropsWithChildren) {
   }
 
   async function retryBootstrap() {
-    await syncSessionRef.current(session)
+    const requestId = ++requestIdRef.current
+    setLoading(true)
+    setAuthError(null)
+    try {
+      const { data, error } = await supabase.auth.getSession()
+      if (requestId !== requestIdRef.current) return
+      if (error) throw error
+      await syncSessionRef.current(data.session)
+    } catch {
+      if (requestId !== requestIdRef.current) return
+      setAuthError('Nao foi possivel verificar sua sessao. Tente novamente.')
+      setLoading(false)
+    }
   }
 
   async function completeOnboarding(payload: CreateUserRequest) {
-    setLoading(true)
+    if (!session) throw new Error('Sua sessao mudou. Entre novamente.')
+    const requestId = ++requestIdRef.current
     setAuthError(null)
-
-    try {
-      const profile = await createProfile(payload)
-      setUserProfile(profile)
-      return profile
-    } finally {
-      setLoading(false)
+    // Keep the form mounted while saving so validation errors retain its values.
+    const profile = await createProfile(payload)
+    if (requestIdRef.current !== requestId) {
+      throw new Error('Sua sessao mudou. Tente novamente.')
     }
+    setUserProfile(profile)
+    return profile
   }
 
   return (

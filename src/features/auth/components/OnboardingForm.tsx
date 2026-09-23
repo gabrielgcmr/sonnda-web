@@ -5,7 +5,8 @@ import { useAuth } from '../hooks/useAuth'
 import { formatPhoneInput, normalizeCpf, normalizePhone, translateFieldError, validateForm, type FormState, type FormErrors } from '../utils/onboarding'
 
 function OnboardingForm({ onCompleted }: { onCompleted: () => void }) {
-  const { completeOnboarding, loading } = useAuth()
+  const { completeOnboarding } = useAuth()
+  const [loading, setLoading] = useState(false)
   const [values, setValues] = useState<FormState>({
     full_name: '',
     birth_date: '',
@@ -17,6 +18,7 @@ function OnboardingForm({ onCompleted }: { onCompleted: () => void }) {
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
+    if (loading) return
 
     const validationErrors = validateForm(values)
 
@@ -28,6 +30,7 @@ function OnboardingForm({ onCompleted }: { onCompleted: () => void }) {
     setFieldErrors({})
     setSubmitError(null)
 
+    setLoading(true)
     try {
       await completeOnboarding({
         full_name: values.full_name.trim(),
@@ -59,6 +62,8 @@ function OnboardingForm({ onCompleted }: { onCompleted: () => void }) {
       }
 
       setSubmitError('Nao foi possivel concluir o cadastro.')
+    } finally {
+      setLoading(false)
     }
   }
 

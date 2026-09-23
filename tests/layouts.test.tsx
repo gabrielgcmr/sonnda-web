@@ -73,5 +73,43 @@ test('guards hide protected content during loading and bootstrap errors', () => 
     )
     assert.doesNotMatch(html, /Protected patient data/)
     assert.match(html, state.loading ? /Carregando sua sessao/ : /Falha de teste/)
+    if (!state.loading) assert.match(html, /Tentar novamente/)
   }
+})
+
+
+test('patients are never rendered for a guest or an account without a profile', () => {
+  for (const state of [
+    { isAuthenticated: false, userProfile: null },
+    { isAuthenticated: false, userProfile: account.userProfile },
+    { isAuthenticated: true, userProfile: null },
+  ]) {
+    const html = renderToStaticMarkup(
+      <AuthContext.Provider value={{ ...account, ...state }}>
+        <MemoryRouter initialEntries={['/app']}>
+          <Routes>
+            <Route element={<AuthGuard access="profiled" />}>
+              <Route path="/app" element={<p>Protected patient data</p>} />
+            </Route>
+          </Routes>
+        </MemoryRouter>
+      </AuthContext.Provider>,
+    )
+    assert.doesNotMatch(html, /Protected patient data/)
+  }
+})
+
+test('authenticated profiles can render patients', () => {
+  const html = renderToStaticMarkup(
+    <AuthContext.Provider value={account}>
+      <MemoryRouter initialEntries={['/app']}>
+        <Routes>
+          <Route element={<AuthGuard access="profiled" />}>
+            <Route path="/app" element={<p>Protected patient data</p>} />
+          </Route>
+        </Routes>
+      </MemoryRouter>
+    </AuthContext.Provider>,
+  )
+  assert.match(html, /Protected patient data/)
 })

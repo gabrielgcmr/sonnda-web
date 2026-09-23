@@ -10,15 +10,19 @@ function apiError(status: number, code: string, detail: string) {
   })
 }
 
-test('missing profile and onboarding denial allow the onboarding flow', () => {
-  assert.equal(isProfileNotFoundError(apiError(404, 'RESOURCE_NOT_FOUND', 'Perfil ausente')), true)
-  assert.equal(isProfileNotFoundError(apiError(403, 'ACCESS_DENIED', 'Cadastro necessário')), true)
-})
-
-test('authentication, permission and network failures do not become missing profiles', () => {
-  assert.equal(isProfileNotFoundError(apiError(401, 'UNAUTHORIZED', 'Token inválido')), false)
-  assert.equal(isProfileNotFoundError(apiError(403, 'ACCESS_DENIED', 'Acesso negado')), false)
-  assert.equal(isProfileNotFoundError(new Error('Network error')), false)
+test('only the explicit missing-profile contract allows onboarding', () => {
+  assert.equal(isProfileNotFoundError(apiError(403, 'PROFILE_NOT_FOUND', 'Mensagem pode mudar')), true)
+  for (const error of [
+    apiError(404, 'RESOURCE_NOT_FOUND', 'Perfil ausente'),
+    apiError(403, 'ACCESS_DENIED', 'Cadastro necessário'),
+    apiError(401, 'AUTH_REQUIRED', 'Token inválido'),
+    apiError(403, 'ACCESS_DENIED', 'Acesso negado'),
+    apiError(500, 'INTERNAL_ERROR', 'Cadastro necessário'),
+    apiError(500, 'PROFILE_NOT_FOUND', 'Resposta inconsistente'),
+    new Error('Network error'),
+  ]) {
+    assert.equal(isProfileNotFoundError(error), false)
+  }
 })
 
 test('API errors retain field violations for the onboarding form', () => {
