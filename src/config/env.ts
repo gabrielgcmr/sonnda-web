@@ -1,3 +1,4 @@
+// src/config/env.ts
 const DEV_API_URL = 'http://localhost:8080'
 const PROD_API_URL = 'https://api.sonnda.com.br'
 const DEV_API_PROXY_PATH = '/api'

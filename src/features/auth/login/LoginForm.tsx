@@ -1,4 +1,4 @@
-// src/features/auth/components/LoginForm.tsx
+// src/features/auth/login/LoginForm.tsx
 import { useState, type PropsWithChildren } from 'react'
 import type { AuthError } from '@supabase/supabase-js'
 import { useAuth } from '../hooks/useAuth'

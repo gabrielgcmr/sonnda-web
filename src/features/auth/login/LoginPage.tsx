@@ -1,7 +1,7 @@
 // src/features/auth/login/LoginPage.tsx
 import { Link } from 'react-router-dom'
 import { AuthRoutes } from '../authRoutes'
-import LoginForm from '../components/LoginForm'
+import LoginForm from './LoginForm'
 
 function LoginPage() {
   return (

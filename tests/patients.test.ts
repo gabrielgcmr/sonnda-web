@@ -1,7 +1,7 @@
 // tests/patients.test.ts
 import { test } from 'node:test'
 import assert from 'node:assert/strict'
-import { filterPatients } from '../src/features/patient/utils/filterPatients'
+import { filterPatients } from '../src/features/patient/search/utils/filterPatients'
 import { formatBirthDate, maskCpf } from '../src/utils/formatters'
 
 const patients = [

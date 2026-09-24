@@ -2,7 +2,7 @@
 import { Outlet } from 'react-router-dom'
 import { useAccount } from '../../features/account/hooks/useAccount'
 import { useAuth } from '../../features/auth/hooks/useAuth'
-import AppHeader from '../../components/common/AppHeader'
+import AppHeader from './AppHeader'
 import { getDisplayName, getDisplayRole } from '../../features/account/profile/userDisplayName'
 import './AppLayout.css'
 

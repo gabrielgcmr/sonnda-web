@@ -1,5 +1,5 @@
-// src/features/patient/utils/filterPatients.ts
-import type { Patient } from '../types'
+// src/features/patient/search/utils/filterPatients.ts
+import type { Patient } from '../../types'
 
 function normalize(value: string) {
   return value.normalize('NFD').replace(/\p{Diacritic}/gu, '').toLocaleLowerCase('pt-BR').trim()

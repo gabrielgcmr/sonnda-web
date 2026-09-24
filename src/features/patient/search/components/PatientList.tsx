@@ -1,7 +1,7 @@
-// src/features/patient/components/PatientList.tsx
-import Avatar from '../../../components/ui/Avatar'
-import { formatBirthDate, maskCpf } from '../../../utils/formatters'
-import type { Patient } from '../types'
+// src/features/patient/search/components/PatientList.tsx
+import Avatar from '../../../../components/ui/Avatar'
+import { formatBirthDate, maskCpf } from '../../../../utils/formatters'
+import type { Patient } from '../../types'
 import './PatientList.css'
 
 function PatientList({ patients }: { patients: Patient[] }) {

@@ -26,7 +26,7 @@ export default defineConfig([
     rules: {
       'no-restricted-imports': ['error', {
         patterns: [{
-          group: ['**/app/**', '**/pages/**', '**/components/common/**'],
+          group: ['**/app/**', '**/pages/**', '**/components/common/**', '**/lib/**'],
           message: 'Features must not depend on app composition, pages or common application components.',
         }],
       }],
@@ -37,18 +37,18 @@ export default defineConfig([
     rules: {
       'no-restricted-imports': ['error', {
         patterns: [{
-          group: ['**/app/**', '**/pages/**', '**/features/**', '**/services/**', '**/lib/**', '**/common/**'],
+          group: ['**/app/**', '**/pages/**', '**/features/**', '**/services/**', '**/config/**', '**/lib/**', '**/common/**'],
           message: 'Generic UI and utilities must not depend on business features or application infrastructure.',
         }],
       }],
     },
   },
   {
-    files: ['src/services/**/*.{ts,tsx}', 'src/lib/**/*.{ts,tsx}'],
+    files: ['src/services/**/*.{ts,tsx}', 'src/config/**/*.{ts,tsx}'],
     rules: {
       'no-restricted-imports': ['error', {
         patterns: [{
-          group: ['**/app/**', '**/pages/**', '**/features/**', '**/components/**'],
+          group: ['**/app/**', '**/pages/**', '**/features/**', '**/components/**', '**/lib/**'],
           message: 'Infrastructure must not depend on features or presentation.',
         }],
       }],

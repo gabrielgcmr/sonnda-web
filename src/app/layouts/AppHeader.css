@@ -1,4 +1,4 @@
-/* src/components/common/AppHeader.css */
+/* src/app/layouts/AppHeader.css */
 .app-header {
   position: relative;
   z-index: 10;
@@ -61,4 +61,3 @@
 .profile-chip__content h1 {
   font-size: clamp(1.4rem, 2vw, 1.9rem);
 }
-

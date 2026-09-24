@@ -1,6 +1,6 @@
 // src/services/api/client.ts
-import { supabase } from '../../lib/supabaseClient'
-import { env } from '../../lib/env'
+import { supabase } from '../integrations/supabaseClient'
+import { env } from '../../config/env'
 import { ApiError, normalizeProblem } from './errors'
 
 type RequestOptions = RequestInit & {

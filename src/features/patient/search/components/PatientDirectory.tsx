@@ -1,4 +1,4 @@
-// src/features/patient/components/PatientDirectory.tsx
+// src/features/patient/search/components/PatientDirectory.tsx
 import { useState } from 'react'
 import { usePatients } from '../hooks/usePatients'
 import { filterPatients } from '../utils/filterPatients'

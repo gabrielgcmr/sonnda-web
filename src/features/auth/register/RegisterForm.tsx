@@ -1,4 +1,4 @@
-// src/features/auth/components/RegisterForm.tsx
+// src/features/auth/register/RegisterForm.tsx
 import { useState, type PropsWithChildren } from 'react'
 import { useAuth } from '../hooks/useAuth'
 import type { SignUpResult } from '../types'

@@ -1,7 +1,7 @@
-// src/components/common/AppHeader.tsx
+// src/app/layouts/AppHeader.tsx
 import type { UserProfile } from '../../features/account/types'
 import { formatBirthDate, maskCpf } from '../../utils/formatters'
-import Avatar from '../ui/Avatar'
+import Avatar from '../../components/ui/Avatar'
 
 import './AppHeader.css'
 

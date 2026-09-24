@@ -1,7 +1,7 @@
-// src/features/patient/hooks/usePatients.ts
+// src/features/patient/search/hooks/usePatients.ts
 import { useEffect, useState } from 'react'
-import { listPatients } from '../api/patients'
-import type { Patient } from '../types'
+import { listPatients } from '../../api/patients'
+import type { Patient } from '../../types'
 
 export function usePatients() {
   const [patients, setPatients] = useState<Patient[]>([])
