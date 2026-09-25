@@ -1,7 +1,7 @@
 // src/features/account/onboarding/OnboardingForm.tsx
 import { useState } from 'react'
 import { ApiError } from '../../../services/api/errors'
-import { useAccount } from '../hooks/useAccount'
+import { useAccount } from '../useAccount'
 import { formatPhoneInput, normalizeCpf, normalizePhone, translateFieldError, validateForm, type FormState, type FormErrors } from './onboarding'
 
 function OnboardingForm({ onCompleted }: { onCompleted: () => void }) {

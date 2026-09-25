@@ -1,6 +1,6 @@
 // src/features/auth/confirmEmail/ConfirmEmailPage.tsx
 import { Link, useSearchParams } from 'react-router-dom'
-import { AuthRoutes } from '../authRoutes'
+import { AuthRoutes } from './authRoutes'
 
 function ConfirmEmailPage() {
   const [searchParams] = useSearchParams()

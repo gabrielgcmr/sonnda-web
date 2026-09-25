@@ -6,17 +6,19 @@ import {
   useState,
 } from 'react'
 import type { Session } from '@supabase/supabase-js'
-import { supabase } from '../../../services/integrations/supabaseClient'
-import type { LoginInput, SignUpInput } from '../types'
-import { AuthRoutes } from '../authRoutes'
+
+
+import { AuthRoutes } from './authRoutes'
 import { AuthContext } from './auth-context'
+import { supabase } from '@/services/integrations/supabaseClient'
+import type { LoginInput, SignUpInput } from './types'
 
 export function AuthProvider({ children }: PropsWithChildren) {
   const [session, setSession] = useState<Session | null>(null)
   const [loading, setLoading] = useState(true)
   const [authError, setAuthError] = useState<string | null>(null)
   const requestIdRef = useRef(0)
-  const syncSessionRef = useRef<(nextSession: Session | null) => Promise<void>>(async () => {})
+  const syncSessionRef = useRef<(nextSession: Session | null) => Promise<void>>(async () => { })
 
   syncSessionRef.current = async (nextSession: Session | null) => {
     const requestId = requestIdRef.current + 1

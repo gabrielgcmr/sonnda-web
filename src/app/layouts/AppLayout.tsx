@@ -1,7 +1,7 @@
 // src/app/layouts/AppLayout.tsx
 import { Outlet } from 'react-router-dom'
-import { useAccount } from '../../features/account/hooks/useAccount'
-import { useAuth } from '../../features/auth/hooks/useAuth'
+import { useAccount } from '../../features/account/useAccount'
+import { useAuth } from '../../features/auth/useAuth'
 import AppHeader from './AppHeader'
 import { getDisplayName, getDisplayRole } from '../../features/account/profile/userDisplayName'
 import './AppLayout.css'

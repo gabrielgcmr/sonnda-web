@@ -1,7 +1,8 @@
 // src/features/auth/login/LoginForm.tsx
 import { useState, type PropsWithChildren } from 'react'
 import type { AuthError } from '@supabase/supabase-js'
-import { useAuth } from '../hooks/useAuth'
+import { useAuth } from './useAuth'
+
 
 function LoginForm({ children }: PropsWithChildren) {
   const { login, loading } = useAuth()

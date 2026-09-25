@@ -1,7 +1,7 @@
 // src/features/auth/register/RegisterForm.tsx
 import { useState, type PropsWithChildren } from 'react'
-import { useAuth } from '../hooks/useAuth'
-import type { SignUpResult } from '../types'
+import { useAuth } from './useAuth'
+import type { SignUpResult } from './types'
 
 type RegisterFormProps = PropsWithChildren<{ onRegistered: (result: SignUpResult) => void }>
 

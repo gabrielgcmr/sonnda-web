@@ -1,9 +1,10 @@
-// src/features/account/context/AccountProvider.tsx
+// src/features/account/AccountProvider.tsx
 import { type PropsWithChildren, useEffect, useRef, useState } from 'react'
-import { ApiError } from '../../../services/api/errors'
-import { createProfile, loadCurrentProfile } from '../profile/profileApi'
-import type { CreateUserRequest, UserProfile } from '../types'
+import { ApiError } from '../../services/api/errors'
+import type { CreateUserRequest, UserProfile } from './types'
+import { createProfile, loadCurrentProfile } from './profile/profileApi'
 import { AccountContext } from './account-context'
+
 
 type Props = PropsWithChildren<{ userId: string | null }>
 

@@ -1,17 +1,18 @@
 // src/app/router/index.tsx
 import { BrowserRouter, Navigate, Route, Routes, useNavigate } from 'react-router-dom'
-import ConfirmEmailPage from '../../features/auth/confirmEmail/ConfirmEmailPage'
-import LoginPage from '../../features/auth/login/LoginPage'
+import ConfirmEmailPage from '../../features/auth/ConfirmEmailPage'
+import LoginPage from '../../features/auth/LoginPage'
 import OnboardingPage from '../../features/account/onboarding/OnboardingPage'
 import PatientsPage from '../../features/patient/search/PatientsPage'
-import RegisterPage from '../../features/auth/register/RegisterPage'
+import PatientDetailPage from '../../features/patient/PatientDetailPage'
+import RegisterPage from '../../features/auth/RegisterPage'
 import AppLayout from '../layouts/AppLayout'
 import AuthLayout from '../layouts/AuthLayout'
 import AuthGuard from './guards/AuthGuard'
 import { AuthRoutes } from '../../features/auth/authRoutes'
 import { AccountRoutes } from '../../features/account/accountRoutes'
-import { useAuth } from '../../features/auth/hooks/useAuth'
-import { useAccount } from '../../features/account/hooks/useAccount'
+import { useAuth } from '../../features/auth/useAuth'
+import { useAccount } from '../../features/account/useAccount'
 import { PatientRoutes } from '../../features/patient/patientRoutes'
 
 function ApplicationRoutes() {
@@ -49,6 +50,7 @@ function ApplicationRoutes() {
       <Route element={<AuthGuard access="profiled" />}>
         <Route path={PatientRoutes.search} element={<AppLayout />}>
           <Route index element={<PatientsPage profileId={userProfile?.id} />} />
+          <Route path="patients/:patientId" element={<PatientDetailPage />} />
           <Route path="*" element={<Navigate to={PatientRoutes.search} replace />} />
         </Route>
       </Route>

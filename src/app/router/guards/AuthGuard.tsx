@@ -1,10 +1,11 @@
 // src/app/router/guards/AuthGuard.tsx
 import { Navigate, Outlet } from 'react-router-dom'
-import AccountErrorScreen from '../../../features/account/components/AccountErrorScreen'
-import AuthLoadingScreen from '../../../features/auth/components/AuthLoadingScreen'
-import { useAuth } from '../../../features/auth/hooks/useAuth'
-import { useAccount } from '../../../features/account/hooks/useAccount'
+
+import AuthLoadingScreen from '../../../features/auth/AuthLoadingScreen'
+import { useAuth } from '../../../features/auth/useAuth'
+import { useAccount } from '../../../features/account/useAccount'
 import { getRouteRedirect, type RouteAccess } from './routeAccess'
+import AccountErrorScreen from '@/features/account/AccountErrorScreen'
 
 function AuthGuard({ access }: { access: RouteAccess }) {
   const auth = useAuth()

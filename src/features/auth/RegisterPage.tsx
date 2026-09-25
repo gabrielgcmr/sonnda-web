@@ -1,8 +1,9 @@
 // src/features/auth/register/RegisterPage.tsx
 import { Link, useNavigate } from 'react-router-dom'
-import { AuthRoutes } from '../authRoutes'
+import type { SignUpResult } from './types'
+import { AuthRoutes } from './authRoutes'
 import RegisterForm from './RegisterForm'
-import type { SignUpResult } from '../types'
+
 
 function RegisterPage({ onAuthenticated }: { onAuthenticated: () => void }) {
   const navigate = useNavigate()

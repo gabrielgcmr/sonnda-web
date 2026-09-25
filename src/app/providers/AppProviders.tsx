@@ -1,8 +1,8 @@
 // src/app/providers/AppProviders.tsx
 import type { PropsWithChildren } from 'react'
-import { AuthProvider } from '../../features/auth/context/AuthProvider'
-import { useAuth } from '../../features/auth/hooks/useAuth'
-import { AccountProvider } from '../../features/account/context/AccountProvider'
+import { AuthProvider } from '../../features/auth/AuthProvider'
+import { useAuth } from '../../features/auth/useAuth'
+import { AccountProvider } from '../../features/account/AccountProvider'
 
 function CurrentAccount({ children }: PropsWithChildren) {
   const { session } = useAuth()

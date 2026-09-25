@@ -1,4 +1,5 @@
 // src/features/patient/patientRoutes.ts
 export const PatientRoutes = {
-  search: '/app',
-} as const
+  search: "/app",
+  details: "/app/patients",
+} as const;
