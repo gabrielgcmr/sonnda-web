@@ -14,6 +14,13 @@ A configuração existente em `src/config/env.ts` lê `VITE_SUPABASE_URL`,
 `VITE_SUPABASE_ANON_KEY` e, opcionalmente, `VITE_API_URL`.
 Em desenvolvimento, o Vite encaminha as chamadas da API conforme `vite.config.ts`.
 
+## Contrato da API
+
+`contracts.lock` fixa a release e o SHA-256 do bundle publicado por `sonnda-contracts`.
+Execute `bun run contracts:sync` para baixar o bundle, verificar seu checksum e
+gerar `src/generated/openapi.d.ts`. Os tipos de paciente são derivados desse arquivo.
+Ao atualizar o contrato, altere a versão e o SHA-256 no lock e execute o comando novamente.
+
 ```sh
 bun run lint
 bun run test

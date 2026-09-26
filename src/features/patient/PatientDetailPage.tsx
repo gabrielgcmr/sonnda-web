@@ -1,5 +1,5 @@
 // src/features/patient/PatientDetailPage.tsx
-import { useEffect, useState } from 'react'
+import { useEffect, useReducer, useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import { ApiError } from '../../services/api/errors'
 import { formatBirthDate, maskCpf } from '../../utils/formatters'
@@ -24,43 +24,69 @@ const raceLabels: Record<string, string> = {
   UNKNOWN: 'Não informado',
 }
 
+type DetailState = {
+  patient: Patient | null
+  loading: boolean
+  error: string | null
+}
+
+type DetailAction =
+  | { type: 'request' }
+  | { type: 'invalid-id' }
+  | { type: 'success'; patient: Patient }
+  | { type: 'failure'; error: string }
+
+function detailReducer(state: DetailState, action: DetailAction): DetailState {
+  switch (action.type) {
+    case 'request':
+      return { patient: null, loading: true, error: null }
+    case 'invalid-id':
+      return { patient: null, loading: false, error: 'Identificador do paciente inválido.' }
+    case 'success':
+      return { patient: action.patient, loading: false, error: null }
+    case 'failure':
+      return { patient: null, loading: false, error: action.error }
+    default:
+      return state
+  }
+}
+
 function formatCategory(value: string | null | undefined, labels: Record<string, string>) {
   return value ? labels[value] ?? value : 'Não informado'
 }
 
 function PatientDetailPage() {
   const { patientId } = useParams()
-  const [patient, setPatient] = useState<Patient | null>(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
+  const [detailState, dispatch] = useReducer(detailReducer, {
+    patient: null,
+    loading: true,
+    error: null,
+  })
   const [revision, setRevision] = useState(0)
+  const { patient, loading, error } = detailState
 
   useEffect(() => {
     const controller = new AbortController()
-    setPatient(null)
-    setError(null)
-    setLoading(true)
+    dispatch({ type: 'request' })
 
     if (!patientId) {
-      setError('Identificador do paciente inválido.')
-      setLoading(false)
+      dispatch({ type: 'invalid-id' })
       return () => controller.abort()
     }
 
     getPatient(patientId, controller.signal)
       .then((data) => {
-        if (!controller.signal.aborted) setPatient(data)
+        if (!controller.signal.aborted) dispatch({ type: 'success', patient: data })
       })
       .catch((requestError: unknown) => {
         if (controller.signal.aborted) return
-        setError(
-          requestError instanceof ApiError && requestError.status === 404
-            ? 'Paciente não encontrado ou sem acesso.'
-            : 'Não foi possível carregar os dados do paciente.',
-        )
-      })
-      .finally(() => {
-        if (!controller.signal.aborted) setLoading(false)
+        dispatch({
+          type: 'failure',
+          error:
+            requestError instanceof ApiError && requestError.status === 404
+              ? 'Paciente não encontrado ou sem acesso.'
+              : 'Não foi possível carregar os dados do paciente.',
+        })
       })
 
     return () => controller.abort()

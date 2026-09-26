@@ -1,0 +1,4 @@
+source=https://github.com/gabrielgcmr/sonnda-contracts/releases/download
+asset=openapi.yaml
+version=v0.1.1
+sha256=824526642208e68609d8577836d7c1079429fcd9ee898087690b1296e9d5f2a9

@@ -13,11 +13,7 @@ export function getDisplayName(fullName?: string) {
 }
 
 export function getDisplayRole(userProfile: UserProfile | null) {
-  const rawRole =
-    userProfile?.role ??
-    userProfile?.account_type ??
-    userProfile?.user_role ??
-    userProfile?.profile_type
+  const rawRole = userProfile?.account_type
 
   if (typeof rawRole !== 'string' || !rawRole.trim()) {
     return 'Paciente'
