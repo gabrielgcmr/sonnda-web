@@ -10,6 +10,26 @@
   min-height: 0;
 }
 
+.protected-layout__navigation {
+  min-height: 0;
+  padding-block: 0.4rem;
+  border-bottom: 1px solid rgba(115, 190, 161, 0.24);
+  background: #102b2b;
+}
+
+.protected-layout__navigation-inner {
+  width: min(100%, 980px);
+  margin-inline: auto;
+}
+
 .protected-layout__main > .panel {
   margin-inline: auto;
+}
+
+.protected-layout__main--detail {
+  padding-top: 0.75rem;
+}
+
+.protected-layout__main--detail > .panel {
+  padding-top: 1.25rem;
 }

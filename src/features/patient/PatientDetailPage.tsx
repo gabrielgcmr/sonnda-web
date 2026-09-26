@@ -1,10 +1,9 @@
 // src/features/patient/PatientDetailPage.tsx
 import { useEffect, useReducer, useState } from 'react'
-import { Link, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import { ApiError } from '../../services/api/errors'
 import { formatBirthDate, maskCpf } from '../../utils/formatters'
 import { getPatient } from './patientsApi'
-import { PatientRoutes } from './patientRoutes'
 import type { Patient } from './types'
 import './PatientDetailPage.css'
 
@@ -12,15 +11,6 @@ const genderLabels: Record<string, string> = {
   MALE: 'Masculino',
   FEMALE: 'Feminino',
   OTHER: 'Outro',
-  UNKNOWN: 'Não informado',
-}
-
-const raceLabels: Record<string, string> = {
-  WHITE: 'Branca',
-  BLACK: 'Preta',
-  ASIAN: 'Amarela',
-  MIXED: 'Parda',
-  INDIGENOUS: 'Indígena',
   UNKNOWN: 'Não informado',
 }
 
@@ -93,38 +83,35 @@ function PatientDetailPage() {
   }, [patientId, revision])
 
   return (
-    <section className="content-stack patient-detail" aria-labelledby="patient-detail-title">
-      <div className="patient-detail__heading">
-        <Link className="text-link" to={PatientRoutes.search}>Voltar para pacientes</Link>
+    <section className="patient-detail" aria-labelledby="patient-detail-title">
+      <div className="patient-detail__content">
         {patient && (
-          <>
+          <div className="patient-detail__heading">
             <span className="eyebrow">Paciente</span>
             <h1 id="patient-detail-title">{patient.full_name || 'Nome não informado'}</h1>
-          </>
+          </div>
         )}
         {!patient && <h1 id="patient-detail-title">Detalhes do paciente</h1>}
+
+        {loading ? <p className="muted" role="status">Carregando dados do paciente…</p> : null}
+
+        {error ? (
+          <div className="patient-detail__error">
+            <p className="error-banner" role="alert">{error}</p>
+            <button className="button button-primary" onClick={() => setRevision((value) => value + 1)}>
+              Tentar novamente
+            </button>
+          </div>
+        ) : null}
+
+        {patient ? (
+          <dl className="patient-detail__fields">
+            <div><dt>Data de nascimento</dt><dd>{formatBirthDate(patient.birth_date)}</dd></div>
+            <div><dt>CPF</dt><dd>{maskCpf(patient.cpf)}</dd></div>
+            <div><dt>Gênero</dt><dd>{formatCategory(patient.gender, genderLabels)}</dd></div>
+          </dl>
+        ) : null}
       </div>
-
-      {loading ? <p className="muted" role="status">Carregando dados do paciente…</p> : null}
-
-      {error ? (
-        <div className="patient-detail__error">
-          <p className="error-banner" role="alert">{error}</p>
-          <button className="button button-primary" onClick={() => setRevision((value) => value + 1)}>
-            Tentar novamente
-          </button>
-        </div>
-      ) : null}
-
-      {patient ? (
-        <dl className="patient-detail__fields">
-          <div><dt>Data de nascimento</dt><dd>{formatBirthDate(patient.birth_date)}</dd></div>
-          <div><dt>CPF</dt><dd>{maskCpf(patient.cpf)}</dd></div>
-          <div><dt>Telefone</dt><dd>{patient.phone || 'Não informado'}</dd></div>
-          <div><dt>Gênero</dt><dd>{formatCategory(patient.gender, genderLabels)}</dd></div>
-          <div><dt>Raça/cor</dt><dd>{formatCategory(patient.race, raceLabels)}</dd></div>
-        </dl>
-      ) : null}
     </section>
   )
 }
