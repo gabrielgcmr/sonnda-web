@@ -8,6 +8,7 @@
     "api": "bash -lc 'cd ~/dev/sonnda && make dev'",
     "all": "concurrently -n WEB,API -c auto \"bun run web\" \"bun run api\"",
     "contracts:sync": "bun run scripts/sync-contracts.ts",
+    "contracts:check": "bun run contracts:sync && git diff --exit-code -- src/generated/openapi.d.ts",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",

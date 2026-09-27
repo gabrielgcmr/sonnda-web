@@ -7,6 +7,17 @@ import { ApiError, normalizeProblem } from "./errors";
 
 type AccessTokenProvider = () => Promise<string | null>;
 
+export function requireOpenApiData<T>(
+  data: T | undefined,
+  operation: string,
+): T {
+  if (data === undefined) {
+    throw new Error(`API returned an empty response for ${operation}`);
+  }
+
+  return data;
+}
+
 async function readErrorBody(response: Response) {
   const contentType = response.headers.get("content-type") ?? "";
 

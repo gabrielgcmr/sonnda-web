@@ -1,20 +1,16 @@
 // src/features/account/profile/profileApi.ts
-import { openapiClient } from '@/services/api/openapiClient'
+import { openapiClient, requireOpenApiData } from '@/services/api/openapiClient'
+import type { operations } from '@/generated/openapi'
 import type { CreateUserRequest, UserProfile } from '../types'
 import { isProfileNotFoundError } from './profileErrors'
 
-function requireResponseData<T>(data: T | undefined, operation: string): T {
-  if (data === undefined) {
-    throw new Error(`API returned an empty response for ${operation}`)
-  }
-
-  return data
-}
+export type UpdateProfileInput =
+  operations['updateCurrentAccount']['requestBody']['content']['application/json']
 
 export async function loadCurrentProfile() {
   try {
     const { data } = await openapiClient.GET('/v1/me')
-    return requireResponseData<UserProfile>(data, 'GET /v1/me')
+    return requireOpenApiData<UserProfile>(data, 'GET /v1/me')
   } catch (error) {
     if (isProfileNotFoundError(error)) {
       return null;
@@ -26,5 +22,17 @@ export async function loadCurrentProfile() {
 
 export async function createProfile(payload: CreateUserRequest) {
   const { data } = await openapiClient.POST('/v1/me', { body: payload })
-  return requireResponseData<UserProfile>(data, 'POST /v1/me')
+  return requireOpenApiData<UserProfile>(data, 'POST /v1/me')
+}
+
+export async function updateProfile(
+  payload: UpdateProfileInput,
+  signal?: AbortSignal,
+) {
+  const { data } = await openapiClient.PUT('/v1/me', { body: payload, signal })
+  return requireOpenApiData<UserProfile>(data, 'PUT /v1/me')
+}
+
+export async function deleteProfile(signal?: AbortSignal) {
+  await openapiClient.DELETE('/v1/me', { signal })
 }
