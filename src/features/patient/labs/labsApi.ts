@@ -7,14 +7,8 @@ type ListLabReportsQuery = NonNullable<
 type ListLegacyLabsQuery = NonNullable<
   operations['listPatientLabs']['parameters']['query']
 >
-type UploadLegacyLabBody =
-  operations['uploadPatientLab']['requestBody']['content']['multipart/form-data']
-
 export type ListLabReportsOptions = ListLabReportsQuery
 export type ListLegacyLabsOptions = ListLegacyLabsQuery
-export type UploadLegacyLabInput = Omit<UploadLegacyLabBody, 'file'> & {
-  file: Blob
-}
 
 export async function getLabReport(labReportId: string, signal?: AbortSignal) {
   const { data } = await openapiClient.GET('/v1/lab-reports/{labReportId}', {
@@ -53,28 +47,4 @@ export async function listLegacyLabs(
   })
 
   return requireOpenApiData(data, 'GET /v1/patients/{patientId}/labs')
-}
-
-/** @deprecated Use uploadExamDocument for new exam-document uploads. */
-export async function uploadLegacyLab(
-  patientId: string,
-  input: UploadLegacyLabInput,
-  signal?: AbortSignal,
-) {
-  const formData = new FormData()
-  formData.set('file', input.file)
-
-  const body: UploadLegacyLabBody = {
-    ...input,
-    // See uploadExamDocument: format: binary is generated as string.
-    file: input.file as unknown as string,
-  }
-  const { data } = await openapiClient.POST('/v1/patients/{patientId}/labs', {
-    params: { path: { patientId } },
-    body,
-    bodySerializer: () => formData,
-    signal,
-  })
-
-  return requireOpenApiData(data, 'POST /v1/patients/{patientId}/labs')
 }

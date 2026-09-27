@@ -9,7 +9,18 @@
 .patient-detail__fields dt { color: #adc0dc; font-size: 0.65rem; }
 .patient-detail__fields dd { margin: 0.15rem 0 0; overflow-wrap: anywhere; }
 .patient-detail__error { display: grid; justify-items: start; gap: 0.75rem; }
+.patient-detail__workspace { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: start; gap: 0.75rem; }
+.patient-detail__section-panel { min-width: 0; min-height: 8rem; padding: 1rem; border: 1px solid rgba(173, 192, 220, 0.14); border-radius: 8px; background: rgba(13, 26, 47, 0.45); }
+.patient-detail__section-panel h2 { margin: 0 0 0.75rem; font-size: 1rem; }
+.patient-detail__navigation [role='tablist'] { display: grid; gap: 0.5rem; }
+.patient-detail__tab { position: relative; display: grid; width: 2.75rem; aspect-ratio: 1; place-items: center; padding: 0; border: 1px solid rgba(173, 192, 220, 0.2); border-radius: 8px; background: rgba(173, 192, 220, 0.06); color: #adc0dc; transition: background-color 0.15s ease, border-color 0.15s ease, color 0.15s ease; }
+.patient-detail__tab:hover,
+.patient-detail__tab:focus-visible,
+.patient-detail__tab[aria-selected='true'] { border-color: rgba(115, 190, 161, 0.55); background: rgba(115, 190, 161, 0.14); color: #c9f3df; }
+.patient-detail__tab:focus-visible { outline: 2px solid #73bea1; outline-offset: 2px; }
 
 @media (max-width: 600px) {
   .patient-detail__fields { grid-template-columns: 1fr; gap: 0.65rem; }
+  .patient-detail__workspace { gap: 0.5rem; }
+  .patient-detail__tab { width: 2.5rem; }
 }

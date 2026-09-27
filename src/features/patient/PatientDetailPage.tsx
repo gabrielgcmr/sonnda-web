@@ -1,6 +1,7 @@
 // src/features/patient/PatientDetailPage.tsx
 import { useEffect, useReducer, useState } from 'react'
 import { useParams } from 'react-router-dom'
+import { FileText, HeartPulse, Pill } from 'lucide-react'
 import { ApiError } from '../../services/api/errors'
 import { formatBirthDate, maskCpf } from '../../utils/formatters'
 import { getPatient } from './patientsApi'
@@ -13,6 +14,14 @@ const genderLabels: Record<string, string> = {
   OTHER: 'Outro',
   UNKNOWN: 'Não informado',
 }
+
+const patientSections = [
+  { id: 'problems', label: 'Problemas', Icon: HeartPulse },
+  { id: 'exams', label: 'Exames', Icon: FileText },
+  { id: 'medications', label: 'Medicações', Icon: Pill },
+] as const
+
+type PatientSectionId = (typeof patientSections)[number]['id']
 
 type DetailState = {
   patient: Patient | null
@@ -53,7 +62,9 @@ function PatientDetailPage() {
     error: null,
   })
   const [revision, setRevision] = useState(0)
+  const [activeSectionId, setActiveSectionId] = useState<PatientSectionId>('problems')
   const { patient, loading, error } = detailState
+  const activeSection = patientSections.find(({ id }) => id === activeSectionId)!
 
   useEffect(() => {
     const controller = new AbortController()
@@ -111,6 +122,40 @@ function PatientDetailPage() {
             <div><dt>Gênero</dt><dd>{formatCategory(patient.gender, genderLabels)}</dd></div>
           </dl>
         ) : null}
+      </div>
+
+      <div className="patient-detail__workspace">
+        <section
+          className="patient-detail__section-panel"
+          id={`patient-section-${activeSection.id}`}
+          role="tabpanel"
+          aria-labelledby={`patient-tab-${activeSection.id}`}
+          tabIndex={0}
+        >
+          <h2>{activeSection.label}</h2>
+          <p className="muted">Esta seção ainda não está disponível.</p>
+        </section>
+
+        <aside className="patient-detail__navigation" aria-label="Seções do paciente">
+          <div role="tablist" aria-orientation="vertical" aria-label="Seções do paciente">
+            {patientSections.map(({ id, label, Icon }) => (
+              <button
+                key={id}
+                className="patient-detail__tab"
+                id={`patient-tab-${id}`}
+                type="button"
+                role="tab"
+                aria-label={label}
+                aria-controls={`patient-section-${id}`}
+                aria-selected={activeSectionId === id}
+                title={label}
+                onClick={() => setActiveSectionId(id)}
+              >
+                <Icon aria-hidden="true" size={20} strokeWidth={1.8} />
+              </button>
+            ))}
+          </div>
+        </aside>
       </div>
     </section>
   )
