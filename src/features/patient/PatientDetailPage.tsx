@@ -5,6 +5,7 @@ import { FileText, HeartPulse, Pill } from 'lucide-react'
 import { ApiError } from '../../services/api/errors'
 import { formatBirthDate, maskCpf } from '../../utils/formatters'
 import { getPatient } from './patientsApi'
+import ExamsPanel from './exams/ExamsPanel'
 import type { Patient } from './types'
 import './PatientDetailPage.css'
 
@@ -132,8 +133,14 @@ function PatientDetailPage() {
           aria-labelledby={`patient-tab-${activeSection.id}`}
           tabIndex={0}
         >
-          <h2>{activeSection.label}</h2>
-          <p className="muted">Esta seção ainda não está disponível.</p>
+          {activeSectionId === 'exams' && patientId ? (
+            <ExamsPanel patientId={patientId} />
+          ) : (
+            <>
+              <h2>{activeSection.label}</h2>
+              <p className="muted">Esta seção ainda não está disponível.</p>
+            </>
+          )}
         </section>
 
         <aside className="patient-detail__navigation" aria-label="Seções do paciente">
