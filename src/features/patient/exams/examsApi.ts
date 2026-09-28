@@ -1,4 +1,4 @@
-import type { operations } from '@/generated/openapi'
+import type { components, operations } from '@/generated/openapi'
 import { openapiClient, requireOpenApiData } from '@/services/api/openapiClient'
 
 type UploadExamDocumentBody =
@@ -6,6 +6,25 @@ type UploadExamDocumentBody =
 
 export type UploadExamDocumentInput = Omit<UploadExamDocumentBody, 'file'> & {
   file: Blob
+}
+
+export type ExamDocument = components['schemas']['ExamDocument']
+export type ExamDocumentFile = components['schemas']['ExamDocumentFile']
+
+export async function listExamDocuments(
+  patientId: string,
+  query?: operations['listExamDocuments']['parameters']['query'],
+  signal?: AbortSignal,
+) {
+  const { data } = await openapiClient.GET(
+    '/v1/patients/{patientId}/exam-documents',
+    {
+      params: { path: { patientId }, query },
+      signal,
+    },
+  )
+
+  return requireOpenApiData(data, 'GET /v1/patients/{patientId}/exam-documents')
 }
 
 export async function getExamDocument(
@@ -18,6 +37,21 @@ export async function getExamDocument(
   })
 
   return requireOpenApiData(data, 'GET /v1/exam-documents/{documentId}')
+}
+
+export async function getExamDocumentFile(
+  documentId: string,
+  signal?: AbortSignal,
+) {
+  const { data } = await openapiClient.GET(
+    '/v1/exam-documents/{documentId}/file',
+    {
+      params: { path: { documentId } },
+      signal,
+    },
+  )
+
+  return requireOpenApiData(data, 'GET /v1/exam-documents/{documentId}/file')
 }
 
 export async function uploadExamDocument(
