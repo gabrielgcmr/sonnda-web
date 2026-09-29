@@ -3,8 +3,8 @@ import { BrowserRouter, Navigate, Route, Routes, useNavigate } from 'react-route
 import ConfirmEmailPage from '../../features/auth/ConfirmEmailPage'
 import LoginPage from '../../features/auth/LoginPage'
 import OnboardingPage from '../../features/account/onboarding/OnboardingPage'
-import PatientsPage from '../../features/patient/search/PatientsPage'
 import PatientDetailPage from '../../features/patient/PatientDetailPage'
+import WorkspacePage from '../../features/workspace/WorkspacePage'
 import RegisterPage from '../../features/auth/RegisterPage'
 import AppLayout from '../layouts/AppLayout'
 import AuthLayout from '../layouts/AuthLayout'
@@ -22,7 +22,7 @@ function ApplicationRoutes() {
 
   return (
     <Routes>
-      <Route path="/" element={<AuthGuard access="root" />} />
+      <Route path="/app/*" element={<Navigate to="/" replace />} />
       <Route element={<AuthGuard access="guest" />}>
         <Route element={<AuthLayout />}>
           <Route path={AuthRoutes.login} element={<LoginPage />} />
@@ -49,7 +49,7 @@ function ApplicationRoutes() {
       </Route>
       <Route element={<AuthGuard access="profiled" />}>
         <Route path={PatientRoutes.search} element={<AppLayout />}>
-          <Route index element={<PatientsPage profileId={userProfile?.id} />} />
+          <Route index element={<WorkspacePage profileId={userProfile?.id} />} />
           <Route path="patients/:patientId" element={<PatientDetailPage />} />
           <Route path="*" element={<Navigate to={PatientRoutes.search} replace />} />
         </Route>

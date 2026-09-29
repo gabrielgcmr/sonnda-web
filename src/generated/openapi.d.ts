@@ -67,6 +67,23 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/lab-extractions": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Extrair dados laboratoriais sem persistir o documento */
+        post: operations["extractTemporaryLabReport"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/lab-reports/{labReportId}": {
         parameters: {
             query?: never;
@@ -411,6 +428,36 @@ export interface components {
             updated_at: string;
             uploaded_by_user_id: string;
         };
+        ExtractedLabReport: {
+            insurance_provider: string | null;
+            lab_name: string | null;
+            lab_phone: string | null;
+            patient_dob: string | null;
+            patient_name: string | null;
+            report_date: string | null;
+            requesting_doctor: string | null;
+            technical_manager: string | null;
+            tests: components["schemas"]["ExtractedTestResult"][] | null;
+        };
+        ExtractedTestItem: {
+            parameter_name: string;
+            reference_text: string | null;
+            result_unit: string | null;
+            result_value: string | null;
+        };
+        ExtractedTestResult: {
+            collected_at: string | null;
+            items: components["schemas"]["ExtractedTestItem"][] | null;
+            material: string | null;
+            method: string | null;
+            release_at: string | null;
+            test_name: string;
+        };
+        ExtractionWarning: {
+            code: string;
+            field?: string;
+            message: string;
+        };
         HealthResponse: {
             /**
              * Format: uri
@@ -505,6 +552,17 @@ export interface components {
             openapi: string;
             ready: string;
             version: string;
+        };
+        TemporaryLabExtractionResponse: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             * @example https://example.com/schemas/TemporaryLabExtractionResponse.json
+             */
+            readonly $schema?: string;
+            report: components["schemas"]["ExtractedLabReport"];
+            status: string;
+            warnings?: components["schemas"]["ExtractionWarning"][] | null;
         };
         TestItemOutput: {
             id: string;
@@ -735,6 +793,78 @@ export interface operations {
             };
             /** @description Error */
             default: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    extractTemporaryLabReport: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "multipart/form-data": {
+                    /** Format: binary */
+                    file: string;
+                };
+            };
+        };
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["TemporaryLabExtractionResponse"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+            /** @description Request Entity Too Large */
+            413: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+            /** @description Unsupported Media Type */
+            415: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
                 headers: {
                     [name: string]: unknown;
                 };

@@ -10,19 +10,19 @@ const registered = { isAuthenticated: true, hasProfile: true }
 test('the entry route sends each account state to the correct screen', () => {
   assert.equal(getRouteRedirect('root', guest), '/login')
   assert.equal(getRouteRedirect('root', onboarding), '/onboarding')
-  assert.equal(getRouteRedirect('root', registered), '/app')
+  assert.equal(getRouteRedirect('root', registered), '/')
 })
 
 test('login, registration and confirmation are available only to guests', () => {
   assert.equal(getRouteRedirect('guest', guest), null)
   assert.equal(getRouteRedirect('guest', onboarding), '/onboarding')
-  assert.equal(getRouteRedirect('guest', registered), '/app')
+  assert.equal(getRouteRedirect('guest', registered), '/')
 })
 
 test('onboarding requires authentication and an incomplete profile', () => {
   assert.equal(getRouteRedirect('onboarding', guest), '/login')
   assert.equal(getRouteRedirect('onboarding', onboarding), null)
-  assert.equal(getRouteRedirect('onboarding', registered), '/app')
+  assert.equal(getRouteRedirect('onboarding', registered), '/')
 })
 
 test('patients require both authentication and a profile', () => {

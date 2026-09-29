@@ -1,0 +1,14 @@
+/* src/features/workspace/extraction/LabExtractionPanel.css */
+.lab-extraction { display: grid; gap: 1.25rem; }
+.lab-extraction__intro { display: grid; gap: 0.35rem; }
+.lab-extraction__workspace { display: grid; grid-template-columns: minmax(17rem, 0.8fr) minmax(0, 1.2fr); gap: 1rem; align-items: stretch; }
+.lab-extraction__form, .lab-extraction__summary { display: grid; align-content: start; gap: 1rem; padding: 1rem; border: 1px solid rgba(173, 192, 220, 0.14); border-radius: 16px; background: rgba(13, 26, 47, 0.45); }
+.lab-extraction__form h3, .lab-extraction__summary h3 { margin: 0 0 0.25rem; }
+.lab-extraction__form small { color: #adc0dc; }
+.lab-extraction__summary-heading { display: flex; align-items: start; justify-content: space-between; gap: 1rem; }
+.lab-extraction__summary-heading .button { gap: 0.45rem; white-space: nowrap; }
+.lab-extraction__empty { display: grid; place-items: center; align-content: center; min-height: 14rem; gap: 0.75rem; padding: 1rem; text-align: center; border: 1px dashed rgba(173, 192, 220, 0.22); border-radius: 12px; }
+.lab-extraction__warning { margin: 0; padding: 0.75rem 0.9rem; border-left: 3px solid #f4c55a; background: rgba(124, 87, 18, 0.25); color: #ffe7ad; }
+.lab-extraction__summary-text { min-height: 14rem; margin: 0; padding: 1rem; overflow: auto; border: 1px solid rgba(173, 192, 220, 0.14); border-radius: 12px; background: rgba(8, 17, 32, 0.55); color: #eef4ff; font: 0.9rem/1.65 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; white-space: pre-wrap; }
+@media (max-width: 760px) { .lab-extraction__workspace { grid-template-columns: 1fr; } }
+@media (max-width: 420px) { .lab-extraction__summary-heading { flex-direction: column; } .lab-extraction__summary-heading .button { width: 100%; } }
