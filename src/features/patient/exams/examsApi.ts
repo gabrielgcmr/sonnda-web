@@ -1,15 +1,16 @@
 import type { components, operations } from '@/generated/openapi'
 import { openapiClient, requireOpenApiData } from '@/services/api/openapiClient'
 
-type UploadExamDocumentBody =
-  operations['uploadExamDocument']['requestBody']['content']['multipart/form-data']
+type UploadExamDocumentBody = NonNullable<
+  operations['uploadExamDocument']['requestBody']
+>['content']['multipart/form-data']
 
 export type UploadExamDocumentInput = Omit<UploadExamDocumentBody, 'file'> & {
   file: Blob
 }
 
-export type ExamDocument = components['schemas']['ExamDocument']
-export type ExamDocumentFile = components['schemas']['ExamDocumentFile']
+export type ExamDocument = components['schemas']['ExamDocumentOutput']
+export type ExamDocumentFile = components['schemas']['ExamDocumentFileResponse']
 
 export async function listExamDocuments(
   patientId: string,
@@ -24,7 +25,7 @@ export async function listExamDocuments(
     },
   )
 
-  return requireOpenApiData(data, 'GET /patients/{patientId}/exam-documents')
+  return requireOpenApiData(data, 'GET /patients/{patientId}/exam-documents') ?? []
 }
 
 export async function getExamDocument(

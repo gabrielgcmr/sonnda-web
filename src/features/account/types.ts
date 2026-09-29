@@ -1,8 +1,8 @@
 // src/features/account/types.ts
 import type { components } from '@/generated/openapi'
 
-export type UserProfile = components['schemas']['User']
-export type CreateUserRequest = components['schemas']['CreateUserRequest']
+export type UserProfile = components['schemas']['AccountUserResponse']
+export type CreateUserRequest = components['schemas']['CreateAccountRequest']
 
 export type AccountContextValue = {
   userProfile: UserProfile | null
