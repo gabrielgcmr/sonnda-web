@@ -17,26 +17,26 @@ export async function listExamDocuments(
   signal?: AbortSignal,
 ) {
   const { data } = await openapiClient.GET(
-    '/v1/patients/{patientId}/exam-documents',
+    '/patients/{patientId}/exam-documents',
     {
       params: { path: { patientId }, query },
       signal,
     },
   )
 
-  return requireOpenApiData(data, 'GET /v1/patients/{patientId}/exam-documents')
+  return requireOpenApiData(data, 'GET /patients/{patientId}/exam-documents')
 }
 
 export async function getExamDocument(
   documentId: string,
   signal?: AbortSignal,
 ) {
-  const { data } = await openapiClient.GET('/v1/exam-documents/{documentId}', {
+  const { data } = await openapiClient.GET('/exam-documents/{documentId}', {
     params: { path: { documentId } },
     signal,
   })
 
-  return requireOpenApiData(data, 'GET /v1/exam-documents/{documentId}')
+  return requireOpenApiData(data, 'GET /exam-documents/{documentId}')
 }
 
 export async function getExamDocumentFile(
@@ -44,14 +44,14 @@ export async function getExamDocumentFile(
   signal?: AbortSignal,
 ) {
   const { data } = await openapiClient.GET(
-    '/v1/exam-documents/{documentId}/file',
+    '/exam-documents/{documentId}/file',
     {
       params: { path: { documentId } },
       signal,
     },
   )
 
-  return requireOpenApiData(data, 'GET /v1/exam-documents/{documentId}/file')
+  return requireOpenApiData(data, 'GET /exam-documents/{documentId}/file')
 }
 
 export async function uploadExamDocument(
@@ -73,7 +73,7 @@ export async function uploadExamDocument(
     file: input.file as unknown as string,
   }
   const { data } = await openapiClient.POST(
-    '/v1/patients/{patientId}/exam-documents',
+    '/patients/{patientId}/exam-documents',
     {
       params: { path: { patientId } },
       body,
@@ -84,6 +84,6 @@ export async function uploadExamDocument(
 
   return requireOpenApiData(
     data,
-    'POST /v1/patients/{patientId}/exam-documents',
+    'POST /patients/{patientId}/exam-documents',
   )
 }

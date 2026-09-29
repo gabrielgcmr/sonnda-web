@@ -38,6 +38,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/exam-documents/{documentId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Obter documento de exame */
+        get: operations["getExamDocument"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/exam-documents/{documentId}/file": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Obter URL temporária do arquivo de exame */
+        get: operations["getExamDocumentFile"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/healthz": {
         parameters: {
             query?: never;
@@ -55,58 +89,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/readyz": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Readiness check */
-        get: operations["getReadiness"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/exam-documents/{documentId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Obter documento de exame */
-        get: operations["getExamDocument"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/exam-documents/{documentId}/file": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Obter URL temporária do arquivo de exame */
-        get: operations["getExamDocumentFile"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/v1/lab-reports/{labReportId}": {
+    "/lab-reports/{labReportId}": {
         parameters: {
             query?: never;
             header?: never;
@@ -123,7 +106,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/v1/me": {
+    "/me": {
         parameters: {
             query?: never;
             header?: never;
@@ -151,7 +134,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/v1/me/patients": {
+    "/me/patients": {
         parameters: {
             query?: never;
             header?: never;
@@ -168,7 +151,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/v1/patients": {
+    "/patients": {
         parameters: {
             query?: never;
             header?: never;
@@ -186,7 +169,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/v1/patients/{patientId}": {
+    "/patients/{patientId}": {
         parameters: {
             query?: never;
             header?: never;
@@ -203,7 +186,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/v1/patients/{patientId}/exam-documents": {
+    "/patients/{patientId}/exam-documents": {
         parameters: {
             query?: never;
             header?: never;
@@ -221,7 +204,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/v1/patients/{patientId}/lab-reports": {
+    "/patients/{patientId}/lab-reports": {
         parameters: {
             query?: never;
             header?: never;
@@ -238,15 +221,15 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/v1/patients/{patientId}/labs": {
+    "/readyz": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /** Listar laudos */
-        get: operations["listPatientLabs"];
+        /** Readiness check */
+        get: operations["getReadiness"];
         put?: never;
         post?: never;
         delete?: never;
@@ -599,46 +582,6 @@ export interface operations {
             };
         };
     };
-    getHealth: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HealthResponse"];
-                };
-            };
-        };
-    };
-    getReadiness: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HealthResponse"];
-                };
-            };
-        };
-    };
     getExamDocument: {
         parameters: {
             query?: never;
@@ -689,6 +632,26 @@ export interface operations {
             403: components["responses"]["openapi_components_responses_Problem"];
             404: components["responses"]["openapi_components_responses_Problem"];
             500: components["responses"]["openapi_components_responses_Problem"];
+        };
+    };
+    getHealth: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HealthResponse"];
+                };
+            };
         };
     };
     getLabReport: {
@@ -1030,23 +993,11 @@ export interface operations {
             500: components["responses"]["openapi_components_responses_Problem"];
         };
     };
-    listPatientLabs: {
+    getReadiness: {
         parameters: {
-            query?: {
-                /** @description Retorna a representação completa quando expand=full */
-                expand?: "full";
-                /** @description Lista de campos para expandir (ex.: results) */
-                include?: string;
-                /** @description Número máximo de itens */
-                limit?: components["parameters"]["openapi_components_parameters_LimitParam"];
-                /** @description Número de itens para pular */
-                offset?: components["parameters"]["openapi_components_parameters_OffsetParam"];
-            };
+            query?: never;
             header?: never;
-            path: {
-                /** @description Identificador do paciente */
-                patientId: components["parameters"]["openapi_components_parameters_PatientId"];
-            };
+            path?: never;
             cookie?: never;
         };
         requestBody?: never;
@@ -1057,12 +1008,9 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["LabsList"];
+                    "application/json": components["schemas"]["HealthResponse"];
                 };
             };
-            400: components["responses"]["openapi_components_responses_Problem"];
-            401: components["responses"]["openapi_components_responses_Problem"];
-            500: components["responses"]["openapi_components_responses_Problem"];
         };
     };
 }

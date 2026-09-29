@@ -46,7 +46,7 @@ src/
 │   │   ├── hooks/
 │   │   ├── authRoutes.ts
 │   │   └── types.ts
-│   ├── account/          # Perfil da aplicação e onboarding via /v1/me
+│   ├── account/          # Perfil da aplicação e onboarding via /me
 │   │   ├── profile/
 │   │   ├── onboarding/   # OnboardingPage, formulário e validações
 │   │   ├── components/
@@ -118,6 +118,6 @@ guards e composição dos layouts. Os testes usam dados locais e não acessam co
 
 - URLs: `/`, `/login`, `/register`, `/confirm-email`, `/onboarding` e `/app`.
 - Sessão e autenticação usam o cliente em `services/integrations/supabaseClient.ts`.
-- Perfil usa `/v1/me`; pacientes usam `/v1/patients`.
+- Perfil usa `/me`; pacientes usam `/patients`.
 - A página inicial autenticada continua sendo a lista de pacientes, com o header
   separado do conteúdo. A rota da API atualmente retorna até 100 pacientes.

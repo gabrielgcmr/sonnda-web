@@ -9,8 +9,8 @@ export type UpdateProfileInput =
 
 export async function loadCurrentProfile() {
   try {
-    const { data } = await openapiClient.GET('/v1/me')
-    return requireOpenApiData<UserProfile>(data, 'GET /v1/me')
+    const { data } = await openapiClient.GET('/me')
+    return requireOpenApiData<UserProfile>(data, 'GET /me')
   } catch (error) {
     if (isProfileNotFoundError(error)) {
       return null;
@@ -21,18 +21,18 @@ export async function loadCurrentProfile() {
 }
 
 export async function createProfile(payload: CreateUserRequest) {
-  const { data } = await openapiClient.POST('/v1/me', { body: payload })
-  return requireOpenApiData<UserProfile>(data, 'POST /v1/me')
+  const { data } = await openapiClient.POST('/me', { body: payload })
+  return requireOpenApiData<UserProfile>(data, 'POST /me')
 }
 
 export async function updateProfile(
   payload: UpdateProfileInput,
   signal?: AbortSignal,
 ) {
-  const { data } = await openapiClient.PUT('/v1/me', { body: payload, signal })
-  return requireOpenApiData<UserProfile>(data, 'PUT /v1/me')
+  const { data } = await openapiClient.PUT('/me', { body: payload, signal })
+  return requireOpenApiData<UserProfile>(data, 'PUT /me')
 }
 
 export async function deleteProfile(signal?: AbortSignal) {
-  await openapiClient.DELETE('/v1/me', { signal })
+  await openapiClient.DELETE('/me', { signal })
 }

@@ -11,39 +11,39 @@ export type CreatePatientInput =
   operations['createPatient']['requestBody']['content']['application/json']
 
 export async function listPatients(signal?: AbortSignal) {
-  const { data } = await openapiClient.GET('/v1/patients', { signal })
+  const { data } = await openapiClient.GET('/patients', { signal })
   return data ?? []
 }
 
 export async function getPatient(patientId: string, signal?: AbortSignal) {
-  const { data } = await openapiClient.GET('/v1/patients/{patientId}', {
+  const { data } = await openapiClient.GET('/patients/{patientId}', {
     params: { path: { patientId } },
     signal,
   })
 
-  return requireOpenApiData(data, 'GET /v1/patients/{patientId}')
+  return requireOpenApiData(data, 'GET /patients/{patientId}')
 }
 
 export async function createPatient(
   input: CreatePatientInput,
   signal?: AbortSignal,
 ) {
-  const { data } = await openapiClient.POST('/v1/patients', {
+  const { data } = await openapiClient.POST('/patients', {
     body: input,
     signal,
   })
 
-  return requireOpenApiData(data, 'POST /v1/patients')
+  return requireOpenApiData(data, 'POST /patients')
 }
 
 export async function listAccessiblePatients(
   options?: ListAccessiblePatientsOptions,
   signal?: AbortSignal,
 ) {
-  const { data } = await openapiClient.GET('/v1/me/patients', {
+  const { data } = await openapiClient.GET('/me/patients', {
     params: { query: options },
     signal,
   })
 
-  return requireOpenApiData(data, 'GET /v1/me/patients')
+  return requireOpenApiData(data, 'GET /me/patients')
 }
