@@ -13,7 +13,7 @@ type AppHeaderProps = {
   onLogout: () => void | Promise<void>
 }
 
-function AppHeader({ displayName, displayRole, email, userProfile, onLogout }: AppHeaderProps) {
+function AppHeader({ displayName, email, userProfile, onLogout }: AppHeaderProps) {
   return (
     <header className="app-header">
       <div className="app-header__inner">
@@ -24,7 +24,6 @@ function AppHeader({ displayName, displayRole, email, userProfile, onLogout }: A
               <Avatar name={displayName} />
               <span className="profile-chip__content">
                 <strong>{displayName}</strong>
-                <span className="muted">{displayRole} · Meu perfil</span>
               </span>
             </summary>
             <div className="header-profile__details">
