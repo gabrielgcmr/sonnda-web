@@ -27,6 +27,41 @@ export interface paths {
         get: operations["getExamDocument"];
         put?: never;
         post?: never;
+        /** Excluir rascunho e PDF */
+        delete: operations["discardExamDocument"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/exam-documents/{documentId}/confirmation": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** Confirmar exame no histórico */
+        post: operations["confirmExamDocument"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/exam-documents/{documentId}/extraction": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Conferir extração do documento */
+        get: operations["getExamDocumentExtraction"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -200,7 +235,7 @@ export interface paths {
         /** Listar documentos de exame */
         get: operations["listExamDocuments"];
         put?: never;
-        /** Enviar documento de exame */
+        /** Extrair PDF laboratorial e criar rascunho para conferência */
         post: operations["uploadExamDocument"];
         delete?: never;
         options?: never;
@@ -392,14 +427,20 @@ export interface components {
             /** Format: double */
             confidence?: number;
             /** Format: date-time */
+            confirmed_at?: string;
+            confirmed_by_user_id?: string;
+            /** Format: date-time */
             created_at: string;
             error_message?: string;
             exam_type?: string;
             extraction_method?: string;
             id: string;
+            lab_report_id?: string;
             mime_type: string;
             original_filename: string;
             patient_id: string;
+            /** @enum {string} */
+            review_status?: "pending" | "confirmed" | "deleting";
             status: string;
             /** Format: date-time */
             updated_at: string;
@@ -538,6 +579,18 @@ export interface components {
             /** Format: date-time */
             updated_at: string;
         };
+        Result: {
+            /**
+             * Format: uri
+             * @description A URL to the JSON Schema for this object.
+             * @example https://example.com/schemas/Result.json
+             */
+            readonly $schema?: string;
+            report: components["schemas"]["ExtractedLabReport"];
+            status: string;
+            summary_text: string;
+            warnings: components["schemas"]["ExtractionWarning"][] | null;
+        };
         RootResponse: {
             /**
              * Format: uri
@@ -552,17 +605,6 @@ export interface components {
             openapi: string;
             ready: string;
             version: string;
-        };
-        TemporaryLabExtractionResponse: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             * @example https://example.com/schemas/TemporaryLabExtractionResponse.json
-             */
-            readonly $schema?: string;
-            report: components["schemas"]["ExtractedLabReport"];
-            status: string;
-            warnings?: components["schemas"]["ExtractionWarning"][] | null;
         };
         TestItemOutput: {
             id: string;
@@ -657,6 +699,223 @@ export interface operations {
                 };
                 content: {
                     "application/json": components["schemas"]["ExamDocumentOutput"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    discardExamDocument: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                documentId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description No Content */
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    confirmExamDocument: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                documentId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["LabReportOutput"];
+                };
+            };
+            /** @description Unauthorized */
+            401: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+            /** @description Forbidden */
+            403: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+            /** @description Not Found */
+            404: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+            /** @description Conflict */
+            409: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+            /** @description Unprocessable Entity */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+            /** @description Internal Server Error */
+            500: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/problem+json": components["schemas"]["ErrorModel"];
+                };
+            };
+        };
+    };
+    getExamDocumentExtraction: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                documentId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description OK */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["Result"];
                 };
             };
             /** @description Unauthorized */
@@ -824,7 +1083,7 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": components["schemas"]["TemporaryLabExtractionResponse"];
+                    "application/json": components["schemas"]["Result"];
                 };
             };
             /** @description Unauthorized */
@@ -1533,7 +1792,6 @@ export interface operations {
         requestBody?: {
             content: {
                 "multipart/form-data": {
-                    collection_date?: string;
                     /** Format: binary */
                     file: string;
                 };

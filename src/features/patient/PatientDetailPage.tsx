@@ -134,7 +134,7 @@ function PatientDetailPage() {
           tabIndex={0}
         >
           {activeSectionId === 'exams' && patientId ? (
-            <ExamsPanel patientId={patientId} />
+            <ExamsPanel patientId={patientId} patientName={patient?.full_name} />
           ) : (
             <>
               <h2>{activeSection.label}</h2>

@@ -16,10 +16,11 @@ Em desenvolvimento, o Vite encaminha as chamadas da API conforme `vite.config.ts
 
 ## Contrato da API
 
-`contracts.lock` fixa a release e o SHA-256 do bundle publicado por `sonnda-contracts`.
-Execute `bun run contracts:sync` para baixar o bundle, verificar seu checksum e
-gerar `src/generated/openapi.d.ts`. Os tipos de paciente são derivados desse arquivo.
-Ao atualizar o contrato, altere a versão e o SHA-256 no lock e execute o comando novamente.
+A API publica um artefato imutável `openapi.json` identificado pelo SHA do commit.
+`bun run openapi:generate` gera `src/generated/openapi.d.ts` a partir desse artefato.
+Em desenvolvimento, o caminho padrão é `../sonnda-api/artifacts/openapi.json`;
+use `OPENAPI_SPEC` para apontar para outro artefato. A integração contínua recebe
+a identidade do artefato publicado pela API.
 
 ```sh
 bun run lint
@@ -121,3 +122,13 @@ guards e composição dos layouts. Os testes usam dados locais e não acessam co
 - Perfil usa `/me`; pacientes usam `/patients`.
 - A página inicial autenticada continua sendo a lista de pacientes, com o header
   separado do conteúdo. A rota da API atualmente retorna até 100 pacientes.
+
+## Extração e conferência de exames
+
+A área de trabalho usa `/lab-extractions` e exibe `summary_text` da API, sem persistência. No paciente, o upload salva um rascunho. A tela permite retomar a conferência, comparar o PDF com os dados extraídos, confirmar no histórico ou descartar o rascunho e seu arquivo.
+
+Somente PDFs laboratoriais com texto selecionável, até 10 MB. Não há edição de campos, data de coleta manual ou OCR de PDFs escaneados. Resultados parciais exibem avisos antes da confirmação.
+
+As mudanças da API e do web devem ser liberadas juntas, após a migration `20260930162723_lab_document_review.sql`. O contrato do mobile precisa de adaptação posterior. Os tipos são gerados com `bun run openapi:generate` a partir do OpenAPI produzido pela API; o comando aceita `OPENAPI_SPEC`.
+
+Os testes de interação da conferência usam Bun e Happy DOM, com dados sintéticos e dependências HTTP simuladas.
