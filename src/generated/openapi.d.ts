@@ -1,21 +1,4 @@
 export interface paths {
-    "/": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** API metadata */
-        get: operations["getApiMetadata"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/exam-documents/{documentId}": {
         parameters: {
             query?: never;
@@ -252,23 +235,6 @@ export interface paths {
         };
         /** Listar laudos laboratoriais */
         get: operations["listPatientLabReports"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/readyz": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** Readiness check */
-        get: operations["getReadiness"];
         put?: never;
         post?: never;
         delete?: never;
@@ -591,21 +557,6 @@ export interface components {
             summary_text: string;
             warnings: components["schemas"]["ExtractionWarning"][] | null;
         };
-        RootResponse: {
-            /**
-             * Format: uri
-             * @description A URL to the JSON Schema for this object.
-             * @example https://example.com/schemas/RootResponse.json
-             */
-            readonly $schema?: string;
-            docs: string;
-            environment: string;
-            health: string;
-            name: string;
-            openapi: string;
-            ready: string;
-            version: string;
-        };
         TestItemOutput: {
             id: string;
             parameter_name: string;
@@ -652,35 +603,6 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
-    getApiMetadata: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["RootResponse"];
-                };
-            };
-            /** @description Error */
-            default: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ErrorModel"];
-                };
-            };
-        };
-    };
     getExamDocument: {
         parameters: {
             query?: never;
@@ -1917,35 +1839,6 @@ export interface operations {
             };
             /** @description Internal Server Error */
             500: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/problem+json": components["schemas"]["ErrorModel"];
-                };
-            };
-        };
-    };
-    getReadiness: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            /** @description OK */
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": components["schemas"]["HealthResponse"];
-                };
-            };
-            /** @description Error */
-            default: {
                 headers: {
                     [name: string]: unknown;
                 };
