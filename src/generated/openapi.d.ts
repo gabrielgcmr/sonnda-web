@@ -478,6 +478,17 @@ export interface components {
              */
             status: string;
         };
+        LabPanelOutput: {
+            /** Format: date-time */
+            collected_at?: string;
+            id: string;
+            material?: string;
+            method?: string;
+            observations: components["schemas"]["ObservationOutput"][] | null;
+            /** Format: date-time */
+            release_at?: string;
+            test_name: string;
+        };
         LabReportOutput: {
             /**
              * Format: uri
@@ -492,6 +503,7 @@ export interface components {
             insurance_provider?: string;
             lab_name?: string;
             lab_phone?: string;
+            panels: components["schemas"]["LabPanelOutput"][] | null;
             /** Format: date-time */
             patient_dob?: string;
             patient_id: string;
@@ -500,7 +512,6 @@ export interface components {
             report_date?: string;
             requesting_doctor?: string;
             technical_manager?: string;
-            test_results: components["schemas"]["TestResultOutput"][] | null;
             /** Format: date-time */
             updated_at: string;
             uploaded_by_user_id: string;
@@ -519,6 +530,13 @@ export interface components {
             patients: components["schemas"]["AccessiblePatientResponse"][] | null;
             /** Format: int64 */
             total: number;
+        };
+        ObservationOutput: {
+            id: string;
+            parameter_name: string;
+            reference_text?: string;
+            result_unit?: string;
+            result_value?: string;
         };
         PatientResponse: {
             /**
@@ -556,24 +574,6 @@ export interface components {
             status: string;
             summary_text: string;
             warnings: components["schemas"]["ExtractionWarning"][] | null;
-        };
-        TestItemOutput: {
-            id: string;
-            parameter_name: string;
-            reference_text?: string;
-            result_unit?: string;
-            result_value?: string;
-        };
-        TestResultOutput: {
-            /** Format: date-time */
-            collected_at?: string;
-            id: string;
-            items: components["schemas"]["TestItemOutput"][] | null;
-            material?: string;
-            method?: string;
-            /** Format: date-time */
-            release_at?: string;
-            test_name: string;
         };
         UpdateAccountRequest: {
             /**
