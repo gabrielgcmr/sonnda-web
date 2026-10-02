@@ -4,8 +4,9 @@ import { calculators } from './registry'
 import './CalculatorsPanel.css'
 
 function CalculatorsPanel() {
-  const [activeId, setActiveId] = useState(calculators[0].id)
+  const [activeId, setActiveId] = useState(calculators[0]?.id)
   const active = calculators.find(calculator => calculator.id === activeId) ?? calculators[0]
+  if (!active) return null
   const { Component } = active
 
   return (
