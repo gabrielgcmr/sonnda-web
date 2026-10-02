@@ -2,6 +2,7 @@
 import { useState } from 'react'
 import { FileSearch, Search, Sigma } from 'lucide-react'
 import PatientsPage from '@/features/patient/search/PatientsPage'
+import CalculatorsPanel from '@/features/calculators/CalculatorsPanel'
 import LabExtractionPanel from './extraction/LabExtractionPanel'
 import './WorkspacePage.css'
 
@@ -34,12 +35,7 @@ function WorkspacePage({ profileId }: { profileId?: string }) {
       <div id={`workspace-panel-${activeTab}`} role="tabpanel" className="workspace__panel">
         {activeTab === 'patients' && <PatientsPage profileId={profileId} />}
         {activeTab === 'extraction' && <LabExtractionPanel />}
-        {activeTab === 'calculators' && (
-          <div className="workspace__empty info-card">
-            <Sigma aria-hidden="true" size={30} />
-            <div><h2>Calculadoras clínicas</h2><p className="muted">Esta área estará disponível em breve.</p></div>
-          </div>
-        )}
+        {activeTab === 'calculators' && <CalculatorsPanel />}
       </div>
     </section>
   )
