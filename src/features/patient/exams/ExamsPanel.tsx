@@ -7,7 +7,6 @@ import {
 } from './examsApi'
 import LabReportDetails from './LabReportDetails'
 import { savedReportView } from './reportView'
-import './ExamsPanel.css'
 
 const statusLabels: Record<string, string> = { uploaded: 'Recebido', processing: 'Em processamento', processed: 'Extraído', needs_review: 'Requer conferência', failed: 'Falhou' }
 const errorMessage = (error: unknown) => error instanceof ApiError ? error.message : 'Não foi possível concluir a operação. Tente novamente.'
@@ -108,11 +107,11 @@ function PatientExams({ patientId, patientName }: Props) {
  }
  const drafts = documents.filter(doc => doc.review_status === 'pending' || doc.review_status === 'deleting')
  const legacy = documents.filter(doc => !doc.review_status)
- return <div className="exams-panel">
+ return <div className="grid min-w-0 gap-5">
   <div><h2>Exames laboratoriais</h2><p className="muted">Paciente selecionado: <strong>{patientName || patientId}</strong></p></div>
-  <form className="exams-panel__form" onSubmit={upload} noValidate>
-   <label className="field" htmlFor="exam-file"><span>PDF laboratorial</span><input ref={fileInput} id="exam-file" type="file" accept="application/pdf,.pdf" disabled={busy} onChange={event => setFile(event.target.files?.[0] ?? null)} />
-    <small>PDF com texto selecionável, até 10 MB. PDFs escaneados não são compatíveis.</small></label>
+  <form className="grid items-end gap-3 min-[601px]:grid-cols-[minmax(0,1fr)_auto]" onSubmit={upload} noValidate>
+   <label className="field" htmlFor="exam-file"><span>PDF laboratorial</span><input className="p-[0.7rem]" ref={fileInput} id="exam-file" type="file" accept="application/pdf,.pdf" disabled={busy} onChange={event => setFile(event.target.files?.[0] ?? null)} />
+    <small className="text-(--app-muted)!">PDF com texto selecionável, até 10 MB. PDFs escaneados não são compatíveis.</small></label>
    <button className="button button-primary" disabled={busy}>{busy ? 'Aguarde…' : 'Extrair e conferir'}</button>
   </form>
   {error && <p className="error-banner" role="alert">{error}</p>}
@@ -121,34 +120,34 @@ function PatientExams({ patientId, patientName }: Props) {
   {loading && <p role="status">Carregando exames…</p>}
   <section><h3>Pendentes de confirmação</h3>
    {!loading && drafts.length === 0 && <p className="muted">Nenhum rascunho pendente.</p>}
-   <ul className="exams-panel__documents">{drafts.map(doc => <li key={doc.id}>
-    <div><strong>{doc.original_filename}</strong><span>{doc.review_status === 'deleting' ? 'Exclusão pendente' : 'Aguardando conferência'}</span></div>
+   <ul className="m-0 grid list-none gap-2 p-0">{drafts.map(doc => <li className="flex flex-wrap items-center gap-[0.65rem] rounded-[10px] border border-(--app-outline) bg-(--app-surface) p-3" key={doc.id}>
+    <div className="grid min-w-40 flex-1 gap-[0.2rem]"><strong className="wrap-anywhere">{doc.original_filename}</strong><span className="wrap-anywhere text-[0.8rem] text-(--app-muted)">{doc.review_status === 'deleting' ? 'Exclusão pendente' : 'Aguardando conferência'}</span></div>
     {doc.review_status === 'pending' && <button className="button button-secondary" disabled={busy} onClick={() => void action(signal => open(doc, signal))}>Conferir</button>}
     <button className="button button-secondary" disabled={busy} onClick={() => void discard(doc)}>{doc.review_status === 'deleting' ? 'Concluir exclusão' : 'Descartar rascunho'}</button>
    </li>)}</ul>
   </section>
-  {selected && <section className="exam-review" aria-label="Conferência do exame">
+  {selected && <section className="min-w-0 border-t border-(--app-outline) pt-6" aria-label="Conferência do exame">
    <h3>{selected.original_filename}</h3>
    <p>Confira se o documento pertence a <strong>{patientName || patientId}</strong> e se os resultados estão corretos.</p>
-   <div className="exam-review__columns">
-    <div>{fileURL && <><a href={fileURL} target="_blank" rel="noreferrer">Abrir PDF em outra aba</a><iframe title="PDF original do exame" src={fileURL} /></>}</div>
+   <div className="grid items-start gap-6 min-[901px]:grid-cols-2">
+    <div>{fileURL && <><a href={fileURL} target="_blank" rel="noreferrer">Abrir PDF em outra aba</a><iframe className="mt-3 h-[70vh] min-h-100 w-full rounded-lg border border-(--app-outline) bg-white" title="PDF original do exame" src={fileURL} /></>}</div>
     <div>{extraction && <>
      <p>Paciente no documento: <strong>{extraction.report.patient_name || 'Não identificado'}</strong></p>
      <p>{extraction.status === 'partial' ? 'Extração parcial: confira os dados disponíveis.' : 'Confira todos os resultados antes de salvar.'}</p>
-     {(extraction.warnings ?? []).map((warning, index) => <p className="exam-review__warning" key={index}>{warning.message}</p>)}
-     <pre className="exam-review__summary">{extraction.summary_text}</pre>
+     {(extraction.warnings ?? []).map((warning, index) => <p className="rounded-[0.4rem] border border-(--app-warning-container) bg-[color-mix(in_srgb,var(--app-warning-container)_30%,transparent)] p-3 text-(--app-on-warning-container)" key={index}>{warning.message}</p>)}
+     <pre className="wrap-anywhere whitespace-pre-wrap rounded-lg border border-(--app-outline) bg-(--md-sys-color-surface-container-lowest) p-4 font-[inherit]">{extraction.summary_text}</pre>
      <LabReportDetails report={extraction.report} />
     </>}</div>
    </div>
-   {selected.review_status === 'pending' && extraction && <div className="exam-review__actions">
-    <label><input type="checkbox" checked={checked} disabled={busy} onChange={event => setChecked(event.target.checked)} /> Conferi o paciente, os resultados e os avisos.</label>
+   {selected.review_status === 'pending' && extraction && <div className="mt-4 flex flex-wrap items-center gap-4">
+    <label className="basis-full"><input className="mr-2 size-4! p-0!" type="checkbox" checked={checked} disabled={busy} onChange={event => setChecked(event.target.checked)} /> Conferi o paciente, os resultados e os avisos.</label>
     <button className="button button-primary" disabled={busy || !checked} onClick={() => void confirm()}>Confirmar exame</button>
     <button className="button button-secondary" disabled={busy} onClick={() => void discard(selected)}>Descartar rascunho e PDF</button>
    </div>}
   </section>}
   <section><h3>Histórico confirmado</h3>
    {!loading && history.length === 0 && <p className="muted">Nenhum exame confirmado.</p>}
-   {history.map(report => <details key={report.id} className="exam-history"><summary>{report.lab_name || 'Exame laboratorial'} · {report.report_date?.slice(0, 10) || 'Data do laudo não identificada'}</summary>
+   {history.map(report => <details key={report.id} className="border-b border-(--app-outline) py-4"><summary className="cursor-pointer font-semibold">{report.lab_name || 'Exame laboratorial'} · {report.report_date?.slice(0, 10) || 'Data do laudo não identificada'}</summary>
     <LabReportDetails report={savedReportView(report)} />
     {report.exam_document_id && <button className="button button-secondary" disabled={busy} onClick={() => void action(async signal => {
      const doc = documents.find(item => item.id === report.exam_document_id)
@@ -156,8 +155,8 @@ function PatientExams({ patientId, patientName }: Props) {
     })}>Ver documento original</button>}
    </details>)}
   </section>
-  {legacy.length > 0 && <section><h3>Documentos anteriores</h3><ul className="exams-panel__documents">{legacy.map(doc => <li key={doc.id}>
-   <span>{doc.original_filename} · {statusLabels[doc.status] ?? doc.status}</span>
+  {legacy.length > 0 && <section><h3>Documentos anteriores</h3><ul className="m-0 grid list-none gap-2 p-0">{legacy.map(doc => <li className="flex flex-wrap items-center gap-[0.65rem] rounded-[10px] border border-(--app-outline) bg-(--app-surface) p-3" key={doc.id}>
+   <span className="wrap-anywhere flex-1">{doc.original_filename} · {statusLabels[doc.status] ?? doc.status}</span>
    <button className="button button-secondary" disabled={busy} onClick={() => void action(signal => open(doc, signal))}>Ver PDF</button>
   </li>)}</ul></section>}
  </div>

@@ -5,7 +5,6 @@ import { useAuth } from '../../features/auth/useAuth'
 import { PatientRoutes } from '../../features/patient/patientRoutes'
 import AppHeader from './AppHeader'
 import { getDisplayName, getDisplayRole } from '../../features/account/profile/userDisplayName'
-import './AppLayout.css'
 
 function AppLayout() {
   const { logout, session } = useAuth()
@@ -15,7 +14,7 @@ function AppLayout() {
   const isPatientDetail = useMatch(`${PatientRoutes.details}/:patientId`)
 
   return (
-    <div className="protected-layout">
+    <div className="flex min-h-screen flex-col">
       <AppHeader
         displayName={displayName}
         displayRole={displayRole}
@@ -24,14 +23,14 @@ function AppLayout() {
         onLogout={logout}
       />
       {isPatientDetail && (
-        <nav className="shell protected-layout__navigation" aria-label="Navegação da página">
-          <div className="protected-layout__navigation-inner">
+        <nav className="min-h-0 border-b border-[color-mix(in_srgb,var(--app-accent)_24%,transparent)] bg-(--app-surface-raised) px-4 py-[0.4rem] min-[901px]:px-8" aria-label="Navegação da página">
+          <div className="mx-auto w-full max-w-250">
             <Link className="text-link" to={PatientRoutes.search}>Voltar para pacientes</Link>
           </div>
         </nav>
       )}
-      <main className={`shell protected-layout__main${isPatientDetail ? ' protected-layout__main--detail' : ''}`}>
-        <div className="panel">
+      <main className={`min-h-0 flex-1 p-4 min-[901px]:p-8${isPatientDetail ? ' pt-3' : ''}`}>
+        <div className={`panel mx-auto${isPatientDetail ? ' pt-5!' : ''}`}>
           <Outlet />
         </div>
       </main>

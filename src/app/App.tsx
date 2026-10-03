@@ -1,12 +1,15 @@
 // src/app/App.tsx
 import AppProviders from './providers/AppProviders'
+import ThemeProvider from './providers/ThemeProvider'
 import AppRouter from './router'
 
 function App() {
   return (
-    <AppProviders>
-      <AppRouter />
-    </AppProviders>
+    <ThemeProvider>
+      <AppProviders>
+        <AppRouter />
+      </AppProviders>
+    </ThemeProvider>
   )
 }
 

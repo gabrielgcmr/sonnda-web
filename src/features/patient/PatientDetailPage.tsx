@@ -7,7 +7,6 @@ import { formatBirthDate, maskCpf } from '../../utils/formatters'
 import { getPatient } from './patientsApi'
 import ExamsPanel from './exams/ExamsPanel'
 import type { Patient } from './types'
-import './PatientDetailPage.css'
 
 const genderLabels: Record<string, string> = {
   MALE: 'Masculino',
@@ -95,12 +94,12 @@ function PatientDetailPage() {
   }, [patientId, revision])
 
   return (
-    <section className="patient-detail" aria-labelledby="patient-detail-title">
-      <div className="patient-detail__content">
+    <section className="grid content-start gap-3" aria-labelledby="patient-detail-title">
+      <div className="grid min-w-0 justify-items-start gap-[0.65rem]">
         {patient && (
-          <div className="patient-detail__heading">
+          <div className="grid justify-items-start gap-1">
             <span className="eyebrow">Paciente</span>
-            <h1 id="patient-detail-title">{patient.full_name || 'Nome não informado'}</h1>
+            <h1 className="wrap-anywhere m-0 text-[1.4rem]" id="patient-detail-title">{patient.full_name || 'Nome não informado'}</h1>
           </div>
         )}
         {!patient && <h1 id="patient-detail-title">Detalhes do paciente</h1>}
@@ -108,7 +107,7 @@ function PatientDetailPage() {
         {loading ? <p className="muted" role="status">Carregando dados do paciente…</p> : null}
 
         {error ? (
-          <div className="patient-detail__error">
+          <div className="grid justify-items-start gap-3">
             <p className="error-banner" role="alert">{error}</p>
             <button className="button button-primary" onClick={() => setRevision((value) => value + 1)}>
               Tentar novamente
@@ -117,17 +116,17 @@ function PatientDetailPage() {
         ) : null}
 
         {patient ? (
-          <dl className="patient-detail__fields">
-            <div><dt>Data de nascimento</dt><dd>{formatBirthDate(patient.birth_date)}</dd></div>
-            <div><dt>CPF</dt><dd>{maskCpf(patient.cpf)}</dd></div>
-            <div><dt>Gênero</dt><dd>{formatCategory(patient.gender, genderLabels)}</dd></div>
+          <dl className="m-0 grid w-full gap-x-5 gap-y-3 min-[601px]:grid-cols-3 max-[600px]:gap-[0.65rem]">
+            <div className="min-w-0"><dt className="text-[0.65rem] text-(--app-muted)">Data de nascimento</dt><dd className="mt-[0.15rem] mb-0 wrap-anywhere">{formatBirthDate(patient.birth_date)}</dd></div>
+            <div className="min-w-0"><dt className="text-[0.65rem] text-(--app-muted)">CPF</dt><dd className="mt-[0.15rem] mb-0 wrap-anywhere">{maskCpf(patient.cpf)}</dd></div>
+            <div className="min-w-0"><dt className="text-[0.65rem] text-(--app-muted)">Gênero</dt><dd className="mt-[0.15rem] mb-0 wrap-anywhere">{formatCategory(patient.gender, genderLabels)}</dd></div>
           </dl>
         ) : null}
       </div>
 
-      <div className="patient-detail__workspace">
+      <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-3 max-[600px]:gap-2">
         <section
-          className="patient-detail__section-panel"
+          className="min-h-32 min-w-0 rounded-lg border border-(--app-outline) bg-(--app-surface) p-4 [&>h2]:mb-3 [&>h2]:text-base"
           id={`patient-section-${activeSection.id}`}
           role="tabpanel"
           aria-labelledby={`patient-tab-${activeSection.id}`}
@@ -143,12 +142,12 @@ function PatientDetailPage() {
           )}
         </section>
 
-        <aside className="patient-detail__navigation" aria-label="Seções do paciente">
-          <div role="tablist" aria-orientation="vertical" aria-label="Seções do paciente">
+        <aside aria-label="Seções do paciente">
+          <div className="grid gap-2" role="tablist" aria-orientation="vertical" aria-label="Seções do paciente">
             {patientSections.map(({ id, label, Icon }) => (
               <button
                 key={id}
-                className="patient-detail__tab"
+                className="relative grid aspect-square w-11 place-items-center rounded-lg border border-(--app-outline) bg-(--app-surface) p-0 text-(--app-muted) transition-colors hover:border-(--app-accent) hover:bg-[color-mix(in_srgb,var(--app-accent)_14%,var(--app-surface))] hover:text-(--app-accent) focus-visible:border-(--app-accent) focus-visible:bg-[color-mix(in_srgb,var(--app-accent)_14%,var(--app-surface))] focus-visible:text-(--app-accent) focus-visible:outline-2 focus-visible:outline-(--app-accent) focus-visible:outline-offset-2 aria-selected:border-(--app-accent) aria-selected:bg-[color-mix(in_srgb,var(--app-accent)_14%,var(--app-surface))] aria-selected:text-(--app-accent) max-[600px]:w-10"
                 id={`patient-tab-${id}`}
                 type="button"
                 role="tab"

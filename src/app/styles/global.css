@@ -1,4 +1,7 @@
 /* src/app/styles/global.css */
+@import "tailwindcss";
+@import "./theme.css";
+
 :root {
   font-family:
     "Instrument Sans",
@@ -6,11 +9,11 @@
     sans-serif;
   line-height: 1.5;
   font-weight: 400;
-  color: #eef4ff;
+  color: var(--app-foreground);
   background:
-    radial-gradient(circle at top right, rgba(45, 99, 181, 0.25), transparent 35%),
-    radial-gradient(circle at bottom left, rgba(22, 163, 74, 0.18), transparent 30%),
-    #081120;
+    radial-gradient(circle at top right, color-mix(in srgb, var(--md-sys-color-secondary) 8%, transparent), transparent 35%),
+    radial-gradient(circle at bottom left, color-mix(in srgb, var(--md-sys-color-tertiary) 6%, transparent), transparent 30%),
+    var(--app-background);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -44,10 +47,10 @@ button {
 input {
   width: 100%;
   padding: 0.95rem 1rem;
-  border: 1px solid rgba(173, 192, 220, 0.2);
+  border: 1px solid var(--app-outline);
   border-radius: 14px;
-  background: rgba(8, 17, 32, 0.68);
-  color: #f8fbff;
+  background: var(--md-sys-color-surface-container-lowest);
+  color: var(--md-sys-color-on-surface);
   transition:
     border-color 0.2s ease,
     box-shadow 0.2s ease,
@@ -56,12 +59,12 @@ input {
 
 input:focus {
   outline: none;
-  border-color: rgba(111, 200, 255, 0.65);
-  box-shadow: 0 0 0 4px rgba(38, 132, 255, 0.12);
+  border-color: var(--app-accent);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--app-accent) 14%, transparent);
 }
 
 input::placeholder {
-  color: #8fa0bc;
+  color: var(--app-muted);
 }
 
 h1,
@@ -80,21 +83,13 @@ p {
   place-items: center;
 }
 
-.auth-layout {
-  width: min(1080px, 100%);
-  display: grid;
-  gap: 1.5rem;
-  grid-template-columns: minmax(0, 1fr) minmax(320px, 480px);
-  align-items: start;
-}
-
 .auth-copy,
 .panel {
-  border: 1px solid rgba(173, 192, 220, 0.18);
+  border: 1px solid var(--app-outline);
   border-radius: 24px;
-  background: rgba(8, 17, 32, 0.78);
+  background: color-mix(in srgb, var(--app-surface) 94%, transparent);
   backdrop-filter: blur(16px);
-  box-shadow: 0 24px 80px rgba(3, 8, 19, 0.35);
+  box-shadow: 0 24px 80px color-mix(in srgb, var(--md-sys-color-shadow) 24%, transparent);
 }
 
 .auth-copy {
@@ -128,9 +123,9 @@ p {
   align-items: center;
   justify-content: center;
   border-radius: 14px;
-  border: 1px solid rgba(173, 192, 220, 0.18);
-  background: rgba(173, 192, 220, 0.08);
-  color: #eef4ff;
+  border: 1px solid var(--app-outline);
+  background: color-mix(in srgb, var(--md-sys-color-on-surface) 8%, transparent);
+  color: var(--app-foreground);
   transition:
     transform 0.2s ease,
     border-color 0.2s ease,
@@ -139,8 +134,8 @@ p {
 
 .icon-button:hover {
   transform: translateY(-1px);
-  border-color: rgba(159, 216, 255, 0.3);
-  background: rgba(173, 192, 220, 0.12);
+  border-color: color-mix(in srgb, var(--app-accent) 30%, transparent);
+  background: color-mix(in srgb, var(--md-sys-color-on-surface) 12%, transparent);
 }
 
 .icon-button svg {
@@ -156,8 +151,8 @@ p {
 .highlight-card,
 .info-card {
   border-radius: 20px;
-  border: 1px solid rgba(173, 192, 220, 0.14);
-  background: rgba(13, 26, 47, 0.82);
+  border: 1px solid var(--app-outline);
+  background: var(--app-surface-raised);
   padding: 1.25rem;
 }
 
@@ -185,11 +180,11 @@ p {
 
 .field span {
   font-size: 0.92rem;
-  color: #bfd0eb;
+  color: var(--app-muted);
 }
 
 .field small {
-  color: #ffb4b4;
+  color: var(--app-error);
 }
 
 .field-full {
@@ -202,20 +197,20 @@ p {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: #9fd8ff;
+  color: var(--app-accent);
 }
 
 .muted {
-  color: #adc0dc;
+  color: var(--app-muted);
 }
 
 .error-banner {
   margin: 0;
   padding: 0.9rem 1rem;
   border-radius: 14px;
-  border: 1px solid rgba(255, 120, 120, 0.3);
-  background: rgba(108, 23, 23, 0.38);
-  color: #ffd1d1;
+  border: 1px solid color-mix(in srgb, var(--app-error) 32%, transparent);
+  background: color-mix(in srgb, var(--md-sys-color-error-container) 28%, transparent);
+  color: var(--app-on-error-container);
 }
 
 .actions-row {
@@ -271,19 +266,19 @@ p {
 }
 
 .button-primary {
-  background: linear-gradient(135deg, #4db6ff, #2c7dff);
-  color: #06101f;
-  box-shadow: 0 14px 30px rgba(33, 118, 255, 0.25);
+  background: var(--app-accent-container);
+  color: var(--app-on-accent-container);
+  box-shadow: 0 14px 30px color-mix(in srgb, var(--app-accent) 20%, transparent);
 }
 
 .button-secondary {
-  background: rgba(173, 192, 220, 0.08);
-  color: #eef4ff;
-  border: 1px solid rgba(173, 192, 220, 0.18);
+  background: var(--app-surface-high);
+  color: var(--app-foreground);
+  border: 1px solid var(--app-outline);
 }
 
 .text-link {
-  color: #9fd8ff;
+  color: var(--app-accent);
   font-weight: 700;
   text-decoration: none;
 }
@@ -296,9 +291,9 @@ p {
   margin: 0;
   padding: 0.9rem 1rem;
   border-radius: 14px;
-  border: 1px solid rgba(120, 255, 188, 0.2);
-  background: rgba(13, 84, 57, 0.34);
-  color: #d9ffec;
+  border: 1px solid color-mix(in srgb, var(--app-accent) 30%, transparent);
+  background: color-mix(in srgb, var(--app-accent-container) 24%, transparent);
+  color: var(--app-on-accent-container);
 }
 
 .auth-footnote {
@@ -307,7 +302,6 @@ p {
 }
 
 @media (max-width: 900px) {
-  .auth-layout,
   .grid-form,
   .profile-grid {
     grid-template-columns: 1fr;
@@ -325,6 +319,6 @@ p {
 }
 
 button:focus-visible, summary:focus-visible {
-  outline: 2px solid #9fd8ff;
+  outline: 2px solid var(--app-accent);
   outline-offset: 4px;
 }

@@ -30,8 +30,8 @@ function Fib4Calculator() {
   const result = valid ? calculateFib4(input) : null
 
   return (
-    <div className="calculator">
-      <div className="field-group calculator__fields">
+    <div className="grid gap-4">
+      <div className="grid gap-4 min-[761px]:grid-cols-2">
         {fields.map(({ key, label, step }) => (
           <label key={key} className="field">
             <span>{label}</span>
@@ -40,17 +40,17 @@ function Fib4Calculator() {
           </label>
         ))}
       </div>
-      <div className="calculator__result" aria-live="polite">
+      <div className="grid min-h-18 content-center gap-1 rounded-xl border border-dashed border-(--app-outline-strong) p-4" aria-live="polite">
         {result === null ? (
           <p className="muted">Preencha todos os campos com valores positivos.</p>
         ) : (
           <>
-            <strong className="calculator__value">{result.toFixed(2).replace('.', ',')}</strong>
+            <strong className="text-[2rem]">{result.toFixed(2).replace('.', ',')}</strong>
             <span>{riskLabels[interpretFib4(result, input.age)]}</span>
           </>
         )}
       </div>
-      <p className="muted calculator__reference">
+      <p className="muted m-0 text-[0.85rem]">
         Referência: &lt; 1,3 baixo risco (&lt; 2,0 se idade ≥ 65); 1,3–2,67 indeterminado; &gt; 2,67 alto risco.
       </p>
     </div>
