@@ -1,0 +1,8 @@
+# Taskfile.yml
+version: "3"
+
+tasks:
+  openapi:
+    desc: Gera os tipos a partir do OpenAPI local da API
+    cmds:
+      - bun run openapi:generate
